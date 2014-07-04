@@ -15,39 +15,39 @@ An HBox can be put in a VBox and vice versa (nesting).
 A component is initially displayed using it's preferred size and grows if it has a larger maximum size
 and shrinks if it has a smaller minimum size. Growing and shrinking is always relative to how 
 much other components in the same window want to grow and shrink.
-<br>Default component sizes are stored in ``HVSize`` and to apply these sizes 
-``CSize`` (which has a fluent API) can be used or extended.
+<br/>Default component sizes are stored in ``HVSize`` and to apply these sizes to a component 
+``CSize`` (which has a fluent API) can be used (and extended if need).
 For example, to create a button that does not grow or shrink:
-<br>``new CSize().set(new JButton("Example")).setFixedSize();``
-<br>and done.
-<br>``CForm`` (also with a fluent API) is available to further assist in building and updating forms/content panes.
+<br/>``new CSize().set(new JButton("Example")).setFixedSize();``
+<br/>and done.
+<br/>``CForm`` (also with a fluent API) is available to further assist in building and updating forms/content panes.
 
 **Check it out**
 
-HVlayout is the ``swing-hvlayout`` module of the multi-module Maven project in this repository,
+HVlayout is in the ``swing-hvlayout`` module of the multi-module Maven project in this repository,
 but HVLayout has no dependencies and can be used separately from the other modules
 (it could get it's own repository in the future).
 To compile and build, checkout the complete repository and run ``mvn package``.
-<br>The ``swing-demo`` project contains a couple of test and demonstration screens.
-Have a look at the source code to see if HVLayout is something you can use
+<br/>The ``swing-demo`` project contains a couple of test and demonstration screens.
+Have a look at the [source code](https://./swing-demo/src/main/java/nl/fw/swing/demo/) to see if HVLayout is something you can use
 and run one of the demo-windows to see how HVLayout shrinks and grows components. 
-<br>The ``swing-util`` project is irrelevant/under construction at the moment, but you may see something you like.
+<br/>The ``swing-util`` project is irrelevant/under construction at the moment, but you may see something you like.
 I'm refactoring code from my [old fwutil project](https://java.net/projects/fwutil/sources/svn/show/trunk/fwutil)
 (where all this once started) in hope of building something useful (as time permits).
 
 **Screenshots**
 
 From the ``swing-demo`` project, some screenshots.
-<br>The ``AddressBookDemo`` with prefererd size and minumum size:
-<br>![](./swing-demo/screenshots/address-book-pref-min.png)
-<br>The ``AddressBookDemo`` with bigger window:
-<br>![](./swing-demo/screenshots/address-book-max.png)
-<br>The ``HvlayoutTestUI`` with prefererd size and minumum size:
-<br>![](./swing-demo/screenshots/testui-pref-min.png)
-<br>The ``HvlayoutTestUI`` with big font, right-to-left component orientation and bigger window:
-<br>![](./swing-demo/screenshots/testui-max-reverse.png)
-<br>The ``RelativeToWindowSize`` with different sizes:
-<br>![](./swing-demo/screenshots/rel-to-window-all.png)
-<br>
+<br/>The ``AddressBookDemo`` with preferred size and minimum size:
+<br/>![](https://./swing-demo/screenshots/address-book-pref-min.png)
+<br/>The ``AddressBookDemo`` with a bigger window:
+<br/>![](https://./swing-demo/screenshots/address-book-max.png)
+<br/>The ``HvlayoutTestUI`` with preferred size and minimum size:
+<br/>![](https://./swing-demo/screenshots/testui-pref-min.png)
+<br/>The ``HvlayoutTestUI`` with a big font, right-to-left component orientation and a bigger window:
+<br/>![](https://./swing-demo/screenshots/testui-max-reverse.png)
+<br/>The ``RelativeToWindowSize`` with different sizes:
+<br/>![](https://./swing-demo/screenshots/rel-to-window-all.png)
+<br/>
 
 Unrelated: I'm also maintaining [Yapool](https://code.google.com/p/yapool/) (a Java generic object pool including a database connection pool).
