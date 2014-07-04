@@ -27,7 +27,11 @@ For example, to create a button that does not grow or shrink:
 HVlayout is in the ``swing-hvlayout`` module of the multi-module Maven project in this repository,
 but HVLayout has no dependencies and can be used separately from the other modules
 (it could get it's own repository in the future).
-To compile and build, checkout the complete repository and run ``mvn package``.
+<br/>To play with the demo screens (screenshots shown below), 
+download the [demo bundle](https://github.com/fwi/HVLayout/raw/master/swing-demo/demo-build/swing-demo-0.1.1-project.zip) 
+zip file, extract it and execute one of the "run..." files
+(for Linux users: copy and paste the contents of one of the run-files to the command prompt and remove the "w" from "javaw").
+<br/>To compile and build, checkout the complete repository (download as zip) and run ``mvn package`` in the main project (aggregator) directory.
 <br/>The ``swing-demo`` project contains a couple of test and demonstration screens.
 Have a look at the [source code](https://github.com/fwi/HVLayout/tree/master/swing-demo/src/main/java/nl/fw/swing/demo) to see if HVLayout is something you can use
 and run one of the demo-windows to see how HVLayout shrinks and grows components. 
