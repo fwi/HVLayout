@@ -45,7 +45,7 @@ public class BaseCForm<CFORM extends BaseCForm<CFORM, CSIZE, CTYPE>,
 
 	/**
 	 * Returns the component sizer.
-	 * @see {@link #csize()}
+	 * <br>See also {@link #csize()}
 	 */
 	public CSIZE getCSize() {
 		return cs;
@@ -112,7 +112,7 @@ public class BaseCForm<CFORM extends BaseCForm<CFORM, CSIZE, CTYPE>,
 	 * Add a component to the current active container. 
 	 * Last component is set to given component.
 	 * <br>Use {@link #addChild(Container)} to add a container to the container tree.
-	 * @see {@link #csize()} which uses the last component.
+	 * <br>See also {@link #csize()} which uses the last component.
 	 */
 	public CFORM add(CTYPE c) {
 		get().add(setLast(c).getLast());
@@ -127,7 +127,7 @@ public class BaseCForm<CFORM extends BaseCForm<CFORM, CSIZE, CTYPE>,
 
 	/**
 	 * Returns the component that was last added to a container.
-	 * @see {@link #csize()} 
+	 * <br>See also {@link #csize()} 
 	 */
 	public CTYPE getLast() {
 		return lastComponent;

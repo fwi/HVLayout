@@ -20,7 +20,7 @@ public class VBox extends JComponent implements Scrollable {
 
 	/**
 	 * Constructs a container that that lays out components from top to bottom,
-	 * has no border and uses the {@link DefaultHvsize}.
+	 * has no border and uses the {@link HVSize#getDefault()}.
 	 */
 	public VBox() {
 		this(null, null);

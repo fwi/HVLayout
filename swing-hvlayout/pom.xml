@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.fw.swing</groupId>
 		<artifactId>swing-parent</artifactId>
-		<version>0.1.1-SNAPSHOT</version>
+		<version>0.1.1</version>
 		<relativePath>../swing-parent</relativePath>
 	</parent>
 	<artifactId>swing-hvlayout</artifactId>

@@ -24,7 +24,7 @@ public class HLayout extends HVLayout {
 
 	/**
 	 * Creates a layout manager that aligns components in the reading direction,
-	 * uses the {@link DefaultHvsize#getInstance()}.
+	 * uses the {@link HVSize#getDefault()}.
 	 */
 	public HLayout() {
 		this(null);
@@ -39,7 +39,7 @@ public class HLayout extends HVLayout {
 
 	/**
 	 * Creates a layout manager that aligns components horizontally,
-	 * uses the {@link DefaultHvsize#getInstance()}.
+	 * uses the {@link HVSize#getDefault()}.
 	 * @param orientation Either {@link SwingConstants#LEADING} (normal reading direction), 
 	 * {@link SwingConstants#CENTER} (layout in the middle) or {@link SwingConstants#TRAILING} (reverse reading direction).
 	 */
@@ -63,7 +63,7 @@ public class HLayout extends HVLayout {
 	}
 
 	 /** 
-	  * @retrun Either {@link SwingConstants#LEADING} (normal reading direction), 
+	  * @return Either {@link SwingConstants#LEADING} (normal reading direction), 
 	  *{@link SwingConstants#CENTER} (layout in the middle) or {@link SwingConstants#TRAILING} (reverse reading direction).
 	  */
 	public int getOrientation() {

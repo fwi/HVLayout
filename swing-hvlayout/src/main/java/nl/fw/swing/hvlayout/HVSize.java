@@ -50,7 +50,6 @@ public class HVSize {
 
 	/**
 	 * Default instance is used by HVLayout when no instance of this class is specified.
-	 * @return
 	 */
 	public static HVSize getDefault() {
 		return defaultInstance;

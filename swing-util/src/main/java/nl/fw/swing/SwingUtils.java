@@ -167,7 +167,7 @@ public class SwingUtils {
 	 * Applies component orientation to a component and all it's children (in containers).
 	 * A call to {@link #revalidate(Component)} migth be required for a call to
 	 * {@link Component#repaint()} to work in case the given component is not a top-level component. 
-	 * @see {@link ModifierOrientation}, {@link #modifyComponentTree(Component, ComponentModifier)}
+	 * <br>See also {@link ModifierOrientation}, {@link #modifyComponentTree(Component, ComponentModifier)}
 	 */
 	public static void applyComponentOrientation(Component c, ComponentOrientation cor) {
 		modifyComponentTree(c, new ModifierOrientation(cor));
@@ -177,7 +177,7 @@ public class SwingUtils {
 	 * Calls {@link Component#invalidate()} and {@link Component#validate()}
 	 * for the given component and all it's children (in containers).
 	 * The given component should be repainted {@link Component#repaint()} afterwards.
-	 * @see {@link ModifierRevalidate}, {@link #modifyComponentTree(Component, ComponentModifier)}
+	 * <br>See also {@link ModifierRevalidate}, {@link #modifyComponentTree(Component, ComponentModifier)}
 	 */
 	public static void revalidate(Component c) {
 		modifyComponentTree(c, new ModifierRevalidate());

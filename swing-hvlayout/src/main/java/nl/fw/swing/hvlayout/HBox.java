@@ -45,7 +45,7 @@ public class HBox extends JComponent implements Scrollable {
 
 	/**
 	 * Constructor to layout components horizontally.
-	 * @param hvconf If null, {@link DefaultHvsize#getInstance()} is used.
+	 * @param props If null, {@link HVSize#getDefault()} is used.
 	 * @param orientation Either {@link SwingConstants#LEADING} (normal reading direction), 
 	 * {@link SwingConstants#CENTER} (layout in the middle) or {@link SwingConstants#TRAILING} (reverse reading direction).
 	 */

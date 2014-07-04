@@ -69,7 +69,7 @@ public class TButton extends JButton {
 		setRequestFocusEnabled(true);
     }
     
-	/** Similar to {@link TLabel#getToolTipText() */
+	/** Similar to {@link TLabel#getToolTipText()} */
     @Override
     public String getToolTipText(MouseEvent e) {
 

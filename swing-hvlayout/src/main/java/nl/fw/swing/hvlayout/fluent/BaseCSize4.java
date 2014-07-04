@@ -124,14 +124,14 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	}
 
 	/**
-	 * Calls {@link CSize#setLineSize(int, float, float, int)} with line-width and line-height.
+	 * Calls {@link #setLineSize(int, float, float, int)} with line-width and line-height.
 	 */
 	public CSIZE setLineSize(float minWidthFactor, float maxWidthFactor) {
 		return setLineSize(props().getLineWidth(), minWidthFactor, maxWidthFactor);
 	}
 	
 	/**
-	 * Calls {@link CSize#setLineSize(int, float, float, int)} with line-height.
+	 * Calls {@link #setLineSize(int, float, float, int)} with line-height.
 	 */
 	public CSIZE setLineSize(int width, float minWidthFactor, float maxWidthFactor) {
 		return setLineSize(width, minWidthFactor, maxWidthFactor, props().getLineHeight());

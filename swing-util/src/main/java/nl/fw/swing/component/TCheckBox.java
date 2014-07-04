@@ -78,7 +78,7 @@ public class TCheckBox extends JCheckBox {
 		setRequestFocusEnabled(true);
     }
     
-	/** Similar to {@link TLabel#getToolTipText() */
+	/** Similar to {@link TLabel#getToolTipText()} */
     @Override
     public String getToolTipText(MouseEvent e) {
 
