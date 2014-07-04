@@ -29,7 +29,7 @@ but HVLayout has no dependencies and can be used separately from the other modul
 (it could get it's own repository in the future).
 To compile and build, checkout the complete repository and run ``mvn package``.
 <br/>The ``swing-demo`` project contains a couple of test and demonstration screens.
-Have a look at the [source code](https://./swing-demo/src/main/java/nl/fw/swing/demo/) to see if HVLayout is something you can use
+Have a look at the [source code](https://github.com/fwi/HVLayout/tree/master/swing-demo/src/main/java/nl/fw/swing/demo) to see if HVLayout is something you can use
 and run one of the demo-windows to see how HVLayout shrinks and grows components. 
 <br/>The ``swing-util`` project is irrelevant/under construction at the moment, but you may see something you like.
 I'm refactoring code from my [old fwutil project](https://java.net/projects/fwutil/sources/svn/show/trunk/fwutil)
