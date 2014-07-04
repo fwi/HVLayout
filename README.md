@@ -39,15 +39,15 @@ I'm refactoring code from my [old fwutil project](https://java.net/projects/fwut
 
 From the ``swing-demo`` project, some screenshots.
 <br/>The ``AddressBookDemo`` with preferred size and minimum size:
-<br/>![](https://./swing-demo/screenshots/address-book-pref-min.png)
+<br/>![AddressBookDemo-pre-min](https://github.com/fwi/HVLayout/raw/master/swing-demo/screenshots/address-book-pref-min.png)
 <br/>The ``AddressBookDemo`` with a bigger window:
-<br/>![](https://./swing-demo/screenshots/address-book-max.png)
+<br/>![AddressBookDemo-max](https://github.com/fwi/HVLayout/raw/master/swing-demo/screenshots/address-book-max.png)
 <br/>The ``HvlayoutTestUI`` with preferred size and minimum size:
-<br/>![](https://./swing-demo/screenshots/testui-pref-min.png)
+<br/>![HvlayoutTestUI-pref-min](https://github.com/fwi/HVLayout/raw/master/swing-demo/screenshots/testui-pref-min.png)
 <br/>The ``HvlayoutTestUI`` with a big font, right-to-left component orientation and a bigger window:
-<br/>![](https://./swing-demo/screenshots/testui-max-reverse.png)
+<br/>![HvlayoutTestUI-max](https://github.com/fwi/HVLayout/raw/master/swing-demo/screenshots/testui-max-reverse.png)
 <br/>The ``RelativeToWindowSize`` with different sizes:
-<br/>![](https://./swing-demo/screenshots/rel-to-window-all.png)
+<br/>![RelativeToWindowSize-all](https://github.com/fwi/HVLayout/raw/master/swing-demo/screenshots/rel-to-window-all.png)
 <br/>
 
 Unrelated: I'm also maintaining [Yapool](https://code.google.com/p/yapool/) (a Java generic object pool including a database connection pool).
