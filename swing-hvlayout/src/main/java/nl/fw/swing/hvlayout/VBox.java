@@ -1,7 +1,6 @@
 package nl.fw.swing.hvlayout;
 
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -61,41 +60,6 @@ public class VBox extends JComponent implements Scrollable {
 	
 	public HVSize getHvprops() {
 		return getLayout().getHvprops();
-	}
-
-	/**
-	 * This overloaded method ensures that items aligned opposite the line axis
-	 * remain orientated opposite the line axis.
-	 */
-	@Override
-	public void applyComponentOrientation(ComponentOrientation co) {
-		// Code overwrites code in Component and Container.applyComponentOrientation
-		
-        if (co == null) {
-            throw new NullPointerException();
-        }
-        if (co != ComponentOrientation.LEFT_TO_RIGHT && co != ComponentOrientation.RIGHT_TO_LEFT) {
-        	super.applyComponentOrientation(co);
-        	return;
-        }
-		final boolean isLeftToRight = getComponentOrientation().isLeftToRight();
-		if (co.isLeftToRight() == isLeftToRight)
-			return;
-		setComponentOrientation(co);
-		for (int i = 0; i < getComponentCount(); i++) {
-			final Component c = getComponent(i);
-			final boolean cltor = c.getComponentOrientation().isLeftToRight();
-			// Check if component is not orientated opposite the line axis
-			if (cltor != co.isLeftToRight())
-				c.applyComponentOrientation(co);
-			if (cltor == co.isLeftToRight()) {
-				// Component is orientated opposite the line axis
-				if (co.isLeftToRight())
-					c.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-				else
-					c.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-			}
-		}
 	}
 
 	/** To accomodate a scroller */

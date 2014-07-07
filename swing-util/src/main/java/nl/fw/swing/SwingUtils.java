@@ -2,7 +2,6 @@ package nl.fw.swing;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -68,6 +67,28 @@ public class SwingUtils {
 		} catch (Exception e) {
 			log.debug("System look and feel not availalbe: " + e);
 		}
+	}
+
+	/**
+	 * By default a tooltip will disappear after 4 seconds.
+	 * @param dismissDelayMs How long to wait for a tooltip to disappear in milliseconds.
+	 * Value 0 or less is converted to "forever" (i.e. tooltip only disappears when mouse is moved).
+	 */
+	public static void tooltipLinger(int dismissDelayMs) {
+		javax.swing.ToolTipManager.sharedInstance().setDismissDelay(
+				dismissDelayMs < 1 ? Integer.MAX_VALUE : dismissDelayMs);
+	}
+
+	/**
+	 * Set smart revalidate to true to incur less overhead when the method
+	 * {@link Component#revalidate()} is called.
+	 * <br>Revalidate calls {@link Container#isValidateRoot()} which 
+	 * normally results in calling {@link Component#validate()} for the top Windows/Frame/Dialog container.
+	 * With smart revalidate the "validate root" can be a scroll-pane for example
+	 * (see also {@link JComponent#isValidateRoot()}.
+	 */
+	public static void smartRevalidate(boolean beSmart) {
+		System.setProperty("java.awt.smartInvalidate", Boolean.toString(beSmart));
 	}
 	
 	/**
@@ -164,28 +185,18 @@ public class SwingUtils {
 	}
 	
 	/**
-	 * Applies component orientation to a component and all it's children (in containers).
-	 * A call to {@link #revalidate(Component)} migth be required for a call to
-	 * {@link Component#repaint()} to work in case the given component is not a top-level component. 
-	 * <br>See also {@link ModifierOrientation}, {@link #modifyComponentTree(Component, ComponentModifier)}
+	 * Requesting focus in a Window should always be done last, after repainting etc.
+	 * This method calls {@link Component#requestFocusInWindow()} via "invokeLater" 
+	 * which should make it the last UI action to perform and make it more likely
+	 * that the focus request works.
 	 */
-	public static void applyComponentOrientation(Component c, ComponentOrientation cor) {
-		modifyComponentTree(c, new ModifierOrientation(cor));
-	}
-
-	/**
-	 * Calls {@link Component#invalidate()} and {@link Component#validate()}
-	 * for the given component and all it's children (in containers).
-	 * The given component should be repainted {@link Component#repaint()} afterwards.
-	 * <br>See also {@link ModifierRevalidate}, {@link #modifyComponentTree(Component, ComponentModifier)}
-	 */
-	public static void revalidate(Component c) {
-		modifyComponentTree(c, new ModifierRevalidate());
+	public static void requestFocus(final Component c) {
+		SwingUtilities.invokeLater(new Runnable() { @Override public void run() { c.requestFocusInWindow(); }});
 	}
 	
 	/**
 	 * Walks the component tree and applies the modifier.
-	 * Modifier is applier to root/parent first, child/leaf first gives blank screens.
+	 * Modifier is applied to root/parent first, child/leaf first can give blank screens.
 	 * @param target the component or container to modify
 	 * @param modifier the component modifier
 	 */

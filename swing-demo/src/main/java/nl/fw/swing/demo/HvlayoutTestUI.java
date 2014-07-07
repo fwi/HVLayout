@@ -7,8 +7,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -21,7 +19,6 @@ import javax.swing.WindowConstants;
 import nl.fw.swing.SwingUtils;
 import nl.fw.swing.component.JMultiLineLabel;
 import nl.fw.swing.component.TButton;
-import nl.fw.swing.component.TCheckBox;
 import nl.fw.swing.component.TLabel;
 import nl.fw.swing.hvlayout.CSize;
 import nl.fw.swing.hvlayout.HBox;
@@ -41,15 +38,21 @@ public class HvlayoutTestUI extends JFrame {
 
 	public static void main(String[] args) {
 		
+		SwingUtils.smartRevalidate(true);
+		SwingUtils.tooltipLinger(0);
 		SwingUtils.setDefaultUILookAndFeel();
 		SwingUtils.showFrame(new HvlayoutTestUI().buildAndSetLocation());
 	}
 	
-	private boolean rightToLeft, useBigFont;
-	public boolean showTextScroller = true;
-	private final Font sysFont, bigFont;
+	private boolean rightToLeft, showBigFont;
+	private boolean showTextScroller = false;
 	private Container textWithOptionalScroller;
+	private final Font sysFont, bigFont;
 	private JFrame frameInstance;
+	// Need fixed pointer to checkboxes, else runnables in actions get null-references.
+	private final ActionCB rtolACB = new ActionCB();
+	private final ActionCB showTextScrollerACB = new ActionCB();
+	private final ActionCB showBigFontACB = new ActionCB();
 	
 	public HvlayoutTestUI() {
 		super("HVLayout test UI");
@@ -145,52 +148,46 @@ public class HvlayoutTestUI extends JFrame {
 		
 		getContentPane().removeAll();
 		build();
-		SwingUtils.applyComponentOrientation(frameInstance, getComponentOrientation());
+		frameInstance.applyComponentOrientation(getComponentOrientation());
 		revalidate();
 		repaint();
 	}
 	
+	@Override
 	public ComponentOrientation getComponentOrientation() {
 		return (rightToLeft ? ComponentOrientation.RIGHT_TO_LEFT : ComponentOrientation.LEFT_TO_RIGHT);
 	}
 	
 	private JCheckBox buildOrientationCheckBox() {
 		
-		final JCheckBox cb = new TCheckBox("Component orientation right to left");
-		cb.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				rightToLeft = cb.isSelected();
-				SwingUtils.applyComponentOrientation(frameInstance, getComponentOrientation());
-				frameInstance.repaint();
-			}
-		});
-		cb.setSelected(rightToLeft);
-		return cb;
+		return buildActionCB(rtolACB, rightToLeft, "Component orientation right to left",
+				// Need to use Java 8 Lambda expressions badly.
+				new Runnable() { @Override public void run() { 
+					rightToLeft = rtolACB.cb.isSelected();
+				}}, 
+				new Runnable() { @Override public void run() {
+					frameInstance.applyComponentOrientation(getComponentOrientation());
+					frameInstance.repaint();
+					SwingUtils.requestFocus(rtolACB.cb);
+				}});
 	}
 	
 	private JCheckBox buildBigFontCheckBox() {
 		
-		final JCheckBox cb = new TCheckBox("Big font");
-		cb.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				useBigFont = cb.isSelected();
-				if (useBigFont) {
-					SwingUtils.setUIFont(bigFont);
-				} else {
-					SwingUtils.setUIFont(sysFont);
-				}
-				HVSize.alignLineHeight();
-				rebuild();
-			}
-		});
-		cb.setSelected(useBigFont);
-		return cb;
+		return buildActionCB(showBigFontACB, showBigFont, "Big font",
+				new Runnable() { @Override public void run() { 
+					showBigFont = showBigFontACB.cb.isSelected();
+				}}, 
+				new Runnable() { @Override public void run() {
+					if (showBigFont) {
+						SwingUtils.setUIFont(bigFont);
+					} else {
+						SwingUtils.setUIFont(sysFont);
+					}
+					HVSize.alignLineHeight();
+					rebuild();
+					SwingUtils.requestFocus(showBigFontACB.cb);
+				}});
 	}
 
 	final String SCROLLER_MULTI_LINE = "This is a multi-line label."
@@ -211,23 +208,28 @@ public class HvlayoutTestUI extends JFrame {
 	
 	private JCheckBox buildTextScrollerCheckBox() {
 		
-		final JCheckBox cb = new TCheckBox("Put text shown below inside scroller");
-		cb.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				showTextScroller = cb.isSelected();
-				textWithOptionalScroller.removeAll();
-				buildTextScroller(new CSize());
-				SwingUtils.applyComponentOrientation(textWithOptionalScroller, getComponentOrientation());
-				// Must call revalidate to ensure components are painted.
-				SwingUtils.revalidate(textWithOptionalScroller);
-				textWithOptionalScroller.repaint();
-			}
-		});
-		cb.setSelected(showTextScroller);
-		return cb;
+		return buildActionCB(showTextScrollerACB, showTextScroller, "Put text shown below inside scroller",
+				new Runnable() { @Override public void run() { 
+					showTextScroller = showTextScrollerACB.cb.isSelected(); 
+				}}, 
+				new Runnable() { @Override public void run() {
+					textWithOptionalScroller.removeAll();
+					buildTextScroller(new CSize());
+					textWithOptionalScroller.applyComponentOrientation(getComponentOrientation());
+					textWithOptionalScroller.revalidate();
+					textWithOptionalScroller.repaint();
+					SwingUtils.requestFocus(showTextScrollerACB.cb);
+				}});
+	}
+
+	private JCheckBox buildActionCB(ActionCB acb, boolean selected, String text, 
+			final Runnable action, final Runnable uiUpdate) {
+		
+		acb.text = text;
+		acb.marked = selected;
+		acb.action = action;
+		acb.uiUpdate = uiUpdate;
+		return acb.build().cb;
 	}
 	
 	public static void addTitledBorder(Component c, String title, Color color) {

@@ -43,7 +43,7 @@ public class JMultiLineToolTip extends JToolTip {
 		updateUI();
 	}
 
-	public void updateUI() {
+	@Override public void updateUI() {
 		setUI(MultiLineToolTipUI.createUI(this));
 	}
 
@@ -81,27 +81,27 @@ class MultiLineToolTipUI extends BasicToolTipUI {
 		return sharedInstance;
 	}
 
-	public void installUI(final JComponent c) {
+	@Override public void installUI(final JComponent c) {
 		super.installUI(c);
 		// JToolTip tip = (JToolTip)c;
 		rendererPane = new CellRendererPane();
 		c.add(rendererPane);
 	}
 
-	public void uninstallUI(final JComponent c) {
+	@Override public void uninstallUI(final JComponent c) {
 		super.uninstallUI(c);
 		c.remove(rendererPane);
 		rendererPane = null;
 	}
 
-	public void paint(final Graphics g, final JComponent c) {
+	@Override public void paint(final Graphics g, final JComponent c) {
 		final Dimension size = c.getSize();
 		textArea.setBackground(c.getBackground());
 		rendererPane.paintComponent(g, textArea, c, 1, 1,
 				size.width - 1, size.height - 1, true);
 	}
 
-	public Dimension getPreferredSize(final JComponent c) {
+	@Override public Dimension getPreferredSize(final JComponent c) {
 		final String tipText = ((JToolTip)c).getTipText();
 		if (tipText == null || tipText.equals(""))
 			return new Dimension(0,0);
@@ -137,11 +137,11 @@ class MultiLineToolTipUI extends BasicToolTipUI {
 		return dim;
 	}
 
-	public Dimension getMinimumSize(final JComponent c) {
+	@Override public Dimension getMinimumSize(final JComponent c) {
 		return getPreferredSize(c);
 	}
 
-	public Dimension getMaximumSize(final JComponent c) {
+	@Override public Dimension getMaximumSize(final JComponent c) {
 		return getPreferredSize(c);
 	}
 }
