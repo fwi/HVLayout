@@ -161,7 +161,7 @@ public class BaseCSize2<CSIZE extends BaseCSize2<CSIZE, CTYPE>, CTYPE extends Co
 
 	public CSIZE setMaxWidth(int l) {
 		
-		Dimension d = min();
+		Dimension d = max();
 		max(l, d.height);
 		if ((d = pref()).width > l) {
 			pref(l, d.height);

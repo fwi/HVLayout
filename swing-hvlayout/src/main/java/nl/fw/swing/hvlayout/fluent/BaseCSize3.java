@@ -70,7 +70,7 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	 * Allow component to shrink by half of preferred size.
 	 */
 	public CSIZE shrinkWidth() {
-		return shrinkWidth(2.0f);
+		return shrinkWidth(0.5f);
 	}	
 	
 	public CSIZE shrinkWidth(float factor) {
@@ -78,7 +78,7 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	}
 
 	public CSIZE shrinkHeight() {
-		return shrinkWidth(2.0f);
+		return shrinkWidth(0.5f);
 	}	
 	
 	public CSIZE shrinkHeight(float factor) {
