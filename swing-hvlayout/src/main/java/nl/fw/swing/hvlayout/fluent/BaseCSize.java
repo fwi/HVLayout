@@ -48,7 +48,8 @@ public class BaseCSize<CSIZE extends BaseCSize<CSIZE, CTYPE>, CTYPE extends Comp
 	public CSIZE max(Dimension d) { c.setMaximumSize(d); return me(); }
 	public CSIZE min(int w, int h) { return min(dim(w, h)); }
 	public CSIZE pref(int w, int h) { return pref(dim(w, h)); }
-	public CSIZE max(int w, int h) { return max(dim(w, h)); }
+	/** Sets maximum size but limits width and height to {@link HVSize#MAX_WIDTH} and {@link HVSize#MAX_HEIGHT} */
+	public CSIZE max(int w, int h) { return max(dim(Math.min(w, HVSize.MAX_WIDTH), Math.min(h, HVSize.MAX_HEIGHT))); }
 	public CSIZE minWidth(int w) { return min(w, min().height); }
 	public CSIZE prefWidth(int w) { return pref(w, pref().height); }
 	public CSIZE maxWidth(int w) { return max(w, max().height); }

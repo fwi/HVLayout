@@ -67,7 +67,7 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	/* *** Shrink options *** */
 	
 	/**
-	 * Allow component to shrink by half of preferred size.
+	 * Allow component to shrink by half of preferred width.
 	 */
 	public CSIZE shrinkWidth() {
 		return shrinkWidth(0.5f);
@@ -77,6 +77,9 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 		return setMinWidth(shrink(pref().width, factor));
 	}
 
+	/**
+	 * Allow component to shrink by half of preferred height.
+	 */
 	public CSIZE shrinkHeight() {
 		return shrinkWidth(0.5f);
 	}	
@@ -109,7 +112,7 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 		
 		min(CSizeUtils.scale(min(), widthFactor, heightFactor));
 		pref(CSizeUtils.scale(pref(), widthFactor, heightFactor));
-		max(CSizeUtils.scale(max(), widthFactor, heightFactor));
+		setMax(CSizeUtils.scaleMax(max(), widthFactor, heightFactor));
 		return me();
 	}
 
@@ -120,4 +123,5 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	public CSIZE scaleHeight(float factor) {
 		return scale(1.0f, factor);
 	}
+
 }

@@ -5,8 +5,14 @@ import static nl.fw.swing.hvlayout.CSizeUtils.shrink;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Insets;
+
+import javax.swing.JComponent;
 
 import nl.fw.swing.hvlayout.HVSize;
+
+import static nl.fw.swing.hvlayout.CSizeUtils.multiply;
 
 /**
  * Adds functions that set a component size relative to {@link HVSize#getLineHeight()}.
@@ -25,23 +31,26 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 
 	/* *** Fixed size layout *** */
 
-	public CSIZE setFixedHeight() {
-		return setMinHeightLine().setMaxHeightLine();
-	}
-
-	public CSIZE setFixedHeight(float factor) {
-		return setFixedHeight(getLineHeight(factor));
-	}
-
-	public CSIZE setFixedHeight(int h) {
-		return setMinHeight(h).setMaxHeight(h);
-	}
-
+	/** 
+	 * Sets all width sizes to current preferred width. 
+	 */
 	public CSIZE setFixedWidth() {
+		int w = pref().width;
+		return setMinWidth(w).setMaxWidth(w);
+	}
+
+	public CSIZE setFixedWidthButton() {
 		return setMinWidthButton().setMaxWidthButton();
 	}
 
+	/** 
+	 * Sets all width sizes to current preferred width multiplied by given factor. 
+	 */
 	public CSIZE setFixedWidth(float factor) {
+		return setFixedWidth(multiply(pref().width, factor));
+	}
+
+	public CSIZE setFixedWidthButton(float factor) {
 		return setFixedWidth(getButtonWidth(factor));
 	}
 
@@ -49,18 +58,62 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setMinWidth(w).setMaxWidth(w);
 	}
 
+	/** 
+	 * Sets all height sizes to current preferred height. 
+	 */
+	public CSIZE setFixedHeight() {
+		int h = pref().height;
+		return setMinHeight(h).setMaxHeight(h);
+	}
+
+	public CSIZE setFixedHeightLine() {
+		return setMinHeightLine().setMaxHeightLine();
+	}
+
+	public CSIZE setFixedHeightLine(float factor) {
+		return setFixedHeight(getLineHeight(factor));
+	}
+
+	/** 
+	 * Sets all height sizes to current preferred height multiplied by given factor. 
+	 */
+	public CSIZE setFixedHeight(float factor) {
+		return setFixedHeight(multiply(pref().height, factor));
+	}
+
+	public CSIZE setFixedHeight(int h) {
+		return setMinHeight(h).setMaxHeight(h);
+	}
+
+
 	/**
 	 * Sets a fixed size for a component to button-width and line-height.
 	 */
-	public CSIZE setFixed() { 
+	public CSIZE setFixedButtonSize() { 
 		return setFixed(props().getButtonWidth(), props().getLineHeight()); 
+	}
+	
+	/**
+	 * Sets all sizes to current preferred size.
+	 */
+	public CSIZE setFixed() {
+		Dimension p = pref();
+		return setFixed(p.width, p.height); 
 	}
 	
 	/**
 	 * Sets a fixed size for a component scaled to button-width and line-height.
 	 */
-	public CSIZE setFixed(float widthFactor, float heightFactor) {
+	public CSIZE setFixedButtonSize(float widthFactor, float heightFactor) {
 		return setFixed(getButtonWidth(widthFactor), getLineHeight(heightFactor));
+	}
+
+	/**
+	 * Sets all sizes scaled to current preferred size.
+	 */
+	public CSIZE setFixed(float widthFactor, float heightFactor) {
+		Dimension p = pref();
+		return setFixed(multiply(p.width, widthFactor), multiply(p.height, heightFactor)); 
 	}
 
 	public CSIZE setFixed(int w, int h) {
@@ -76,19 +129,39 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	 * @param width if 0, components preferred width is used.
 	 * @param heightFactor scaled to line-height.
 	 */
-	public CSIZE setFixed(int width, float heightFactor) {
+	public CSIZE setFixedLine(int width, float heightFactor) {
 		return setFixed((width == 0 ? pref().width : width), getLineHeight(heightFactor));
 	}
 
 	/**
 	 * Sets a fixed size for a component
-	 * @param widthFactor applied to button-width
+	 * @param width if 0, components preferred width is used.
+	 * @param heightFactor scaled to current preferred height.
+	 */
+	public CSIZE setFixed(int width, float heightFactor) {
+		Dimension p = pref();
+		return setFixed((width == 0 ? p.width : width), multiply(p.height, heightFactor));
+	}
+
+	/**
+	 * Sets a fixed size for a component
+	 * @param widthFactor scaled to button-width
+	 * @param height if 0, components preferred height is used.
+	 */
+	public CSIZE setFixedButton(float widthFactor, int height) {
+		return setFixed(getButtonWidth(widthFactor), (height == 0 ? pref().height : height));
+	}
+
+	/**
+	 * Sets a fixed size for a component
+	 * @param widthFactor scaled to current preferred width
 	 * @param height if 0, components preferred height is used.
 	 */
 	public CSIZE setFixed(float widthFactor, int height) {
-		return setFixed(getButtonWidth(widthFactor), (height == 0 ? pref().height : height));
+		Dimension p = pref();
+		return setFixed(multiply(p.width, widthFactor), (height == 0 ? p.height : height));
 	}
-	
+
 	/* *** Variable line-width layout *** */
 	
 	/**
@@ -211,6 +284,27 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		int maxHeight = (maxFactor <= 0.0f ? MAX_HEIGHT : grow(height, maxFactor));
 		return min(minWidth, minHeight).pref(width, height).max(maxWidth, maxHeight);
 	}
+	
+	/* *** JTextField column width support *** */
+	
+	/** 
+	 * Sets the preferred size to the width of the character <em>m</em> times the given columns
+	 * and adds the insets width. 
+	 */
+	public CSIZE setColumnWidth(int columns) {
+		
+		// Copied from JTextField.getPreferredSize()
+		
+        int insetsWidth = 0;
+        if (c() instanceof JComponent) {
+            Insets insets = ((JComponent)c()).getInsets();
+            insetsWidth = insets.left + insets.right;
+        }
+        FontMetrics metrics = c().getFontMetrics(c().getFont());
+        setPrefWidth(insetsWidth + metrics.charWidth('m') * columns);
+        return me();
+	}
+	
 
 	/* *** Align width/height to defaults *** */
 	

@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 import javax.swing.Scrollable;
-import javax.swing.SwingConstants;
 
 /**
  * A container that lays out components horizontally. This container
@@ -27,15 +26,28 @@ import javax.swing.SwingConstants;
  *
  */
 public class HBox extends JComponent implements Scrollable {
-	
+
 	private static final long serialVersionUID = 7841775222423395208L;
 
-	public HBox() {
-		this(null, SwingConstants.LEADING);
-	}
+	/**
+	 * See {@link HVLayout#LEADING}
+	 */
+	public static final int LEADING = HVLayout.LEADING; // 10
+	/**
+	 * See {@link HVLayout#TRAILING}
+	 */
+	public static final int TRAILING = HVLayout.TRAILING; // 11
+	/**
+	 * See {@link HVLayout#CENTER}
+	 */
+	public static final int CENTER = HVLayout.CENTER; // 0
 	
+	public HBox() {
+		this(null, LEADING);
+	}
+
 	public HBox(HVSize props) {
-		this(props, SwingConstants.LEADING);
+		this(props, LEADING);
 	}
 
 	public HBox(int orientation) {
@@ -45,8 +57,8 @@ public class HBox extends JComponent implements Scrollable {
 	/**
 	 * Constructor to layout components horizontally.
 	 * @param props If null, {@link HVSize#getDefault()} is used.
-	 * @param orientation Either {@link SwingConstants#LEADING} (normal reading direction), 
-	 * {@link SwingConstants#CENTER} (layout in the middle) or {@link SwingConstants#TRAILING} (reverse reading direction).
+	 * @param orientation Either {@link #LEADING} (normal reading direction), 
+	 * {@link #CENTER} (layout in the middle) or {@link #TRAILING} (reverse reading direction).
 	 */
 	public HBox(HVSize props, int orientation) {
 		super();
@@ -57,15 +69,15 @@ public class HBox extends JComponent implements Scrollable {
 	public HLayout getLayout() {
 		return (HLayout) super.getLayout();
 	}
-	
+
 	public void setHvConf(HVSize props) {
 		getLayout().setHvprops(props);
 	}
-	
+
 	public HVSize getHvConf() {
 		return getLayout().getHvprops();
 	}
-	
+
 	/**
 	 * To accomodate a scroller.
 	 */
@@ -110,16 +122,16 @@ public class HBox extends JComponent implements Scrollable {
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * This (overloaded) convenience method allows adding components in the middle of
 	 * a list of components (at the place indicated by index).
 	 * @see java.awt.Container#add(java.awt.Component, int)
 	 */
 	public Component add(final Component comp, final int index) {
-		 // The index is used as constraint and passed on to super().
-		 // This makes it easier to insert a component in the HLayout
-		 // or VLayout list of components.
+		// The index is used as constraint and passed on to super().
+		// This makes it easier to insert a component in the HLayout
+		// or VLayout list of components.
 		super.add(comp, Integer.valueOf(index));
 		return comp;
 	}

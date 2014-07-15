@@ -177,8 +177,6 @@ public class VLayout extends HVLayout {
 			// Check if growing is required, dpreferred.height  > staticMaxHeight determines if components can grow 
 			boolean grow = !smallest && !shrink && (maxHeight > dpreferred.height) && (varMaxSize > 0);
 
-			Dimension cmin, cpref, cmax;
-			
 			// Components that can grow but to a certain height, are static once they reach that max-height.
 			// Adjust the calculations for growing components by removing these "reached max height" components.
 			int varMaxHeightUsed = varMaxSize;
@@ -187,8 +185,8 @@ public class VLayout extends HVLayout {
 			if (grow) {
 				for (int i = 0; i < parts.size(); i++) {
 					final Component c = parts.get(i);
-					cpref = c.getPreferredSize();
-					cmax = c.getMaximumSize();
+					Dimension cpref = c.getPreferredSize();
+					Dimension cmax = c.getMaximumSize();
 					if (cmax.height > cpref.height) {
 						int extra = (int)((maxHeight - dpreferred.height) * ((float)cpref.height / varMaxSize));
 						if (extra > cmax.height - cpref.height) {
@@ -206,10 +204,11 @@ public class VLayout extends HVLayout {
 			int lineHeight = targetInsets.top;
 			for (int i = 0; i < parts.size(); i++) {
 				final Component c = parts.get(i);
-				cmin = c.getMinimumSize();
-				cpref = c.getPreferredSize();
-				cmax = c.getMaximumSize();
-				
+				Dimension cmin = c.getMinimumSize();
+				Dimension cpref = c.getPreferredSize();
+				Dimension cmax = c.getMaximumSize();
+				// Protection against JTextField with column size. 
+				ensureSmall(cmin, cpref);
 				int cwidth = cmin.width;
 				if (maxWidth > cmin.width) {
 					if (maxWidth > cpref.width) {

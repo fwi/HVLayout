@@ -15,7 +15,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -80,17 +79,17 @@ public class AddressBookDemo extends JFrame {
 	
 	public AddressBookDemo build() {
 		
-		CSize cs = new CSize(); // used to size components
-		JList<String> namesList;
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)), cs);
+		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CSize cs = form.csize();
+		
 		addTitledBorder(form.get(), "Main vertical box", Color.BLACK);
 		form.addChild(new HBox());
 		addTitledBorder(form.get(), "General horizontal box", Color.RED);
 		
+		JList<String> namesList;
 		JScrollPane scroller = new JScrollPane(namesList = new JList<String>(names));
-		form.add(scroller);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		cs.set(scroller).setAreaSize(0.8f, 2.0f).fixedWidth();
+		form.add(scroller).csize().setAreaSize(0.8f, 2.0f).fixedWidth();
 		
 		form.addChild(new VBox()); // the main vertical box putting all Hbox/lines below each other
 		addTitledBorder(form.get(), "Address vertical box", Color.GREEN);
@@ -133,7 +132,7 @@ public class AddressBookDemo extends JFrame {
 		// Add a notes text area
 		form.up().add(new JLabel("Notes:")).csize().setFixed().growWidth();
 		form.add(new JScrollPane(new JTextArea(getMarvinNotes()))).csize()
-				.setAreaSize(1.0f, 2.0f).fixedMinHeight().setMaxHeight(4.0f);
+				.setAreaSize(1.0f, 2.0f).fixedMinHeight().setMaxHeight(2.0f);
 
 		// Add empty separator line
 		//form.add(cs.set(new Canvas()).setLineSize().get());
@@ -147,16 +146,16 @@ public class AddressBookDemo extends JFrame {
 		String[] blabels = new String[] {"Add", "Modify", "View details" };
 		for (int i = 0; i < blabels.length; i ++) {
 			b = new TButton(blabels[i]);
-			form.add(b).csize().setFixed();
+			form.add(b).csize().setFixedButtonSize();
 		}
 		
 		// Add a floating delete button 
-		form.up().addChild(new HBox(SwingConstants.CENTER));		
+		form.up().addChild(new HBox(HBox.CENTER));		
 		addTitledBorder(form.get(), "Centered box", Color.ORANGE);
-		form.add(new TButton("Delete")).csize().setFixed();
+		form.add(new TButton("Delete")).csize().setFixedButtonSize();
 		// Add canvas so that delete-button is not (always) in the right-bottom corner
 		// A "new Canvas()" does not show a TitledBorder, an empty label does. 
-		form.add(new TLabel("")).csize().setFixed().setMinWidth(1);
+		form.add(new TLabel("")).csize().setFixedButtonSize().setMinWidth(1);
 		addTitledBorder(form.getLast(), "Canvas", Color.GRAY);
 
 		// Add a scroller around the complete window
@@ -169,7 +168,6 @@ public class AddressBookDemo extends JFrame {
 	    namesList.setSelectedValue(names[names.length-1], true);
 		namesList.requestFocusInWindow();
 		setLocationByPlatform(true);
-		//applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		log.debug(getTitle() + " build.");
 		return this;
 	}
@@ -184,8 +182,8 @@ public class AddressBookDemo extends JFrame {
 	
 	public static TLabel createTextFieldLabel(CSize cs, String labelText) {
 		
-		TLabel c = new TLabel(labelText, SwingConstants.TRAILING);
-		cs.set(c).setFixed();
+		TLabel c = new TLabel(labelText, HBox.TRAILING);
+		cs.set(c).setFixedButtonSize();
 		return c;
 	}
 	
@@ -227,34 +225,3 @@ public class AddressBookDemo extends JFrame {
 	}
 	
 }
-
-/*
-// Buttons of different sizes
-// This demonstrates that the H/Vlayout calculations do not depends on one line height for all,
-// all calculations are based on (preferred) component sizes.
-
-box.add(addressLine = new Hbox());
-
-b = new TButton("Modify");
-
-// Set extra large font.
-b.setFont(b.getFont().deriveFont((float)b.getFont().getSize() + 8));
-
-// Calculate different (preferred) size for button with extra large font.
-int cheight = Hvsize.getComponentHeight(b);
-// Make width proportional to height
-int w = (int)(cs.getHvsize().getButtonWidthFactor() * cheight);
-// TButton has no insets, add 4 to height to keep some room below text.
-int h = cheight + 4;
-
-addressLine.add(cs.set(b).setFixedSize(w, h).get());
-
-// Characters "gjfF" demonstrate there is enough room (line-height) to display characters in full.
-b = new TButton("gjfF Delete");
-b.setFont(b.getFont().deriveFont((float)b.getFont().getSize() + 16));
-cheight = Hvsize.getComponentHeight(b);
-h = cheight + 4;
-w = (int)(cs.getHvsize().getButtonWidthFactor() * cheight);
-addressLine.add(cs.set(b).setFixedSize(w, h).get());
-*/
-

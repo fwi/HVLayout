@@ -13,7 +13,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import nl.fw.swing.SwingUtils;
@@ -72,9 +71,9 @@ public class HvlayoutTestUI extends JFrame {
 		form.add(buildOrientationCheckBox()).csize().setLineSize(cs.pref().width);
 		form.add(buildBigFontCheckBox()).csize().setLineSize();
 		
-		form.up().addChild(new HBox(SwingConstants.CENTER));
+		form.up().addChild(new HBox(HBox.CENTER));
 		//addTitledBorder(form.get(), "Centered box", Color.ORANGE);
-		form.add(new JMultiLineLabel(CENTERED_MULTI_LINE)).csize().setMin();
+		form.add(new JMultiLineLabel(CENTERED_MULTI_LINE)).csize().setMinButtonSize();
 		
 		form.up().addChild(textWithOptionalScroller = new VBox());
 		addTitledBorder(form.get(), "Text with optional scroller", Color.GREEN);
@@ -83,7 +82,7 @@ public class HvlayoutTestUI extends JFrame {
 		form.up().addChild(new HBox());
 		addTitledBorder(form.get(), "Buttons and textfields 1", Color.BLUE);
 		form.addChild(new HBox());
-		form.add(new TLabel("Status", SwingConstants.TRAILING)).csize().setFixed(0.5f, 1.0f);
+		form.add(new TLabel("Status", HBox.TRAILING)).csize().setFixedButtonSize(0.5f, 1.0f);
 		form.add(new JTextField("Testin' HVLayout")).csize().setLineSize();
 		form.up().addChild(new HBox());
 		int lh = cs.getHvsize().getLineHeight();
@@ -95,7 +94,7 @@ public class HvlayoutTestUI extends JFrame {
 		form.up().up().addChild(new HBox());
 		addTitledBorder(form.get(), "Buttons and textfields copy", Color.BLUE);
 		form.addChild(new HBox());
-		form.add(new TLabel("Details", SwingConstants.TRAILING)).csize().setFixed(0.5f, 1.0f);
+		form.add(new TLabel("Details", HBox.TRAILING)).csize().setFixedButtonSize(0.5f, 1.0f);
 		form.add(new JTextField("^ Same kind of row as above ^")).csize().setLineSize();
 		form.up().addChild(new HBox());
 		form.add(new TButton("3")).csize().setFixed(lh, lh);
@@ -108,28 +107,28 @@ public class HvlayoutTestUI extends JFrame {
 			.csize().setAreaSize(1.0f, 3.3f).fixedMinHeight();
 		
 		form.add(new JMultiLineLabel(CENTER_REVERSE_TEXT)).csize().setMinWidthButton();
-		form.addChild(new HBox(SwingConstants.CENTER));
+		form.addChild(new HBox(HBox.CENTER));
 		addTitledBorder(form.get(), "Centered box", Color.ORANGE);
-		form.add(new TButton("CenterD")).csize().setFixed();
+		form.add(new TButton("CenterD")).csize().setFixedButtonSize();
 		form.add(new JTextField("Centered demo")).csize().setLineSize();
 		form.add(new TButton("Dc")).csize().setFixed(lh, lh);
 		
 		form.up().add(new TLabel("Below the same line but not centered")).csize().setLineSize();
 		form.addChild(new HBox());
-		form.add(new TButton("NoCenterD")).csize().setFixed();
+		form.add(new TButton("NoCenterD")).csize().setFixedButtonSize();
 		form.add(new JTextField("Not centered demo")).csize().setLineSize();
 		form.add(new TButton("Nc")).csize().setFixed(lh, lh);
 		
 		form.up().add(new TLabel("Below three horizontal-boxes with different orientations and containing some buttons")).csize().setLineSize();
 		form.addChild(new HBox()).addChild(new HBox());
 		addTitledBorder(form.get(), "Leading box", Color.PINK);
-		form.add(new TButton("Leading")).csize().setFixed();
-		form.up().addChild(new HBox(SwingConstants.CENTER));
+		form.add(new TButton("Leading")).csize().setFixedButtonSize();
+		form.up().addChild(new HBox(HBox.CENTER));
 		addTitledBorder(form.get(), "Centered box", Color.ORANGE);
-		form.add(new TButton("Center")).csize().setFixed();
-		form.up().addChild(new HBox(SwingConstants.TRAILING));
+		form.add(new TButton("Center")).csize().setFixedButtonSize();
+		form.up().addChild(new HBox(HBox.TRAILING));
 		addTitledBorder(form.get(), "Trailing box", Color.MAGENTA);
-		form.add(new TButton("Trailing")).csize().setFixed();
+		form.add(new TButton("Trailing")).csize().setFixedButtonSize();
 		setContentPane(new JScrollPane(form.getRoot()));
 		
 		log.debug(getTitle() + " build.");
@@ -198,7 +197,7 @@ public class HvlayoutTestUI extends JFrame {
 	private void buildTextScroller(CSize cs) {
 
 		textWithOptionalScroller.add(cs.set(buildTextScrollerCheckBox()).setLineSize().get());
-		cs.set(new JMultiLineLabel(SCROLLER_MULTI_LINE)).setMin();
+		cs.set(new JMultiLineLabel(SCROLLER_MULTI_LINE)).setMinButtonSize();
 		if (showTextScroller) {
 			textWithOptionalScroller.add(cs.set(new JScrollPane(cs.get())).setMaxHeight(5.0f).get());
 		} else {

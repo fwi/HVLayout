@@ -7,6 +7,8 @@ import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.util.ArrayList;
 
+import nl.fw.swing.hvlayout.fluent.BaseCSize4;
+
 /**
  * Base class for {@link VLayout} and {@link HLayout}.
  * A lot of code between these classes is similar and where possible,
@@ -18,6 +20,22 @@ import java.util.ArrayList;
  *
  */
 public abstract class HVLayout implements LayoutManager2 { 
+
+	/**
+	 * Orientation following the line-axis.
+	 * See {@link javax.swing.SwingConstants#LEADING}
+	 */
+	public static final int LEADING = javax.swing.SwingConstants.LEADING; // 10
+	/**
+	 * Orientation opposite the line-axis.
+	 * See {@link javax.swing.SwingConstants#TRAILING}
+	 */
+	public static final int TRAILING = javax.swing.SwingConstants.TRAILING; // 11
+	/**
+	 * The central position in an area.
+	 * See {@link javax.swing.SwingConstants#CENTER}
+	 */
+	public static final int CENTER = javax.swing.SwingConstants.CENTER; // 0
 
 	// The components to align vertically
 	protected final transient ArrayList<Component> parts = new ArrayList<Component>(); 
@@ -145,11 +163,25 @@ public abstract class HVLayout implements LayoutManager2 {
 	}
 
 	protected int getSizeDiff(Dimension big, Dimension small, boolean vert) {
-		return (vert ? big.height - small.height : big.width - small.width);
+		return getSize(big, vert) - getSize(small, vert);
+	}
+
+	protected void ensureSmall(Dimension small, Dimension big) {
+
+		if (small.width > big.width) {
+			small.width = big.width;
+		}
+		if (small.height > big.height) {
+			small.height = big.height;
+		}
 	}
 
 	protected boolean isBigger(Dimension big, Dimension small, boolean vert) {
-		return (vert ? big.height > small.height : big.width > small.width);
+		return getSize(big, vert) > getSize(small, vert);
+	}
+	
+	protected int getSmallest(Dimension d1, Dimension d2, boolean vert) {
+		return (getSize(d1, vert) > getSize(d2, vert) ? getSize(d2, vert) : getSize(d1, vert));
 	}
 
 	/** 
@@ -157,7 +189,14 @@ public abstract class HVLayout implements LayoutManager2 {
 	 * The minimum size of this layout calculated by summing up
 	 * all minimum sizes of the components in this layout.
 	 * <br> The container will refuse to draw smaller.
-	 * <br> Also sets varMinHeight which is used in the layoutContainer method.
+	 * <br> Also sets {@link #varMinSize} which is used in the layoutContainer method.
+	 * <p>
+	 * A check is done to confirm min-size is smaller than pref-size.
+	 * This is needed in case a preferred size is calculated and cannot be set on a component.
+	 * An example of this is a {@link javax.swing.JTextField#JTextField(int)} which 
+	 * sets a "column size" which in turn sets a calculated fixed width of a text-field.
+	 * This fixed width cannot be changed, i.e. setting a preferred size has no effect.
+	 * See also {@link BaseCSize4#setColumnWidth(int)}.
 	 */
 	public Dimension minimumLayoutSize(Container target, boolean vert) {
 		
@@ -180,7 +219,9 @@ public abstract class HVLayout implements LayoutManager2 {
 				Component c = parts.get(i);
 				cmin = c.getMinimumSize();
 				cpref = c.getPreferredSize();
-				size += getSize(cmin, vert);;
+				// Protection against JTextField with column size.
+				ensureSmall(cmin, cpref);
+				size += getSize(cmin, vert);
 				maxSizeOpposite = Math.max(maxSizeOpposite, getSize(cmin, !vert));
 				if (isBigger(cpref, cmin, vert)) {
 					varMinSize += getSizeDiff(cpref, cmin, vert);
@@ -216,6 +257,9 @@ public abstract class HVLayout implements LayoutManager2 {
 				Component c = parts.get(i);
 				cpref = c.getPreferredSize();
 				cmax = c.getMaximumSize();
+				// there is no use-case for ensuring pref is smaller than max
+				// but it could prevent errors
+				// ensureSmall(cpref, cmax);
 				size += getSize(cpref, vert);
 				maxSizeOpposite = Math.max(maxSizeOpposite, getSize(cpref, !vert));
 				if (isBigger(cmax, cpref, vert)) {

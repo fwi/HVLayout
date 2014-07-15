@@ -159,11 +159,22 @@ public class CSizeUtils {
 		return d;
 	}
 
+	/**
+	 * Returns given dimension adjusted with given factors.
+	 * But given dimension will never be larger than {@link HVSize#MAX_WIDTH} and {@link HVSize#MAX_HEIGHT}.
+	 */
+	public static Dimension scaleMax(Dimension d, float widthFactor, float heightFactor) {
+
+		d.width = Math.min(multiply(d.width, widthFactor), HVSize.MAX_WIDTH);
+		d.height = Math.min(multiply(d.height, heightFactor), HVSize.MAX_HEIGHT);
+		return d;
+	}
+
 	public static void scaleComponent(Component c, float widthFactor, float heightFactor) {
 		
 		c.setMinimumSize(scale(c.getMinimumSize(), widthFactor, heightFactor));
 		c.setPreferredSize(scale(c.getPreferredSize(), widthFactor, heightFactor));
-		c.setMaximumSize(scale(c.getMaximumSize(), widthFactor, heightFactor));
+		c.setMaximumSize(scaleMax(c.getMaximumSize(), widthFactor, heightFactor));
 	}
 
 	public static void scaleAll(Container c, float widthFactor, float heightFactor) {
