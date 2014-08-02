@@ -40,7 +40,10 @@ public class HVSize {
 		return d;
 	}
 
+	/** Maximum width calculated from total width of all screens. */
 	public static int MAX_WIDTH = SCREEN_SIZE_TOTAL.width;
+	
+	/** Maximum height calculated from height of all screens. */
 	public static int MAX_HEIGHT = SCREEN_SIZE_TOTAL.height;
 
 	private static HVSize defaultInstance = new HVSize();

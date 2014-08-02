@@ -9,6 +9,7 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -16,7 +17,7 @@ public class TableSortHeader extends JTableHeader implements MouseListener {
 
 	private static final long serialVersionUID = -7533271207278413058L;
 	
-	private final TableSortHeaderButton renderer;
+	private TableCellRenderer renderer;
 
 	public TableSortHeader(TableColumnModel tcmodel) {
 		super(tcmodel);
@@ -29,6 +30,15 @@ public class TableSortHeader extends JTableHeader implements MouseListener {
 		//}
 		addMouseListener(this);
 	}
+	
+	public TableCellRenderer getRenderer() {
+		return renderer;
+	}
+	
+	public void setRenderer(TableCellRenderer renderer) {
+		this.renderer = renderer;
+	}
+	
 
 	/** 
 	 * Shows a tooltip with the text in the table header if the

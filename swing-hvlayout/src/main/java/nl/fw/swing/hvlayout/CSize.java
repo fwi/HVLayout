@@ -17,9 +17,6 @@ import nl.fw.swing.hvlayout.fluent.*;
  */
 public class CSize extends BaseCSize4<CSize, Component> {
 
-	public static int MAX_WIDTH = HVSize.SCREEN_SIZE_TOTAL.width;
-	public static int MAX_HEIGHT = HVSize.SCREEN_SIZE_TOTAL.height;
-	
 	private static CSize defaultInstance = new CSize();
 	
 	public static CSize getDefault() {

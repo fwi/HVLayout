@@ -1,43 +1,27 @@
 package nl.fw.swing;
 
 import java.awt.Component;
-import java.awt.Container;
 
+/**
+ * Use together with {@link SwingUtils#modifyComponentTree(Component, ComponentModifier)}
+ * to modify a property for all components in a component tree.
+ * @author fred
+ *
+ */
 public abstract class ComponentModifier {
 
-	private boolean modifyContainer;
 	private Component c;
-	private boolean containerType;
 	
 	public ComponentModifier() {
-		this(false);
-	}
-	public ComponentModifier(boolean modifyContainer) {
 		super();
-		setModifyContainer(modifyContainer);
-	}
-	
-	public boolean isModifyContainer() {
-		return modifyContainer;
-	}
-	public void setModifyContainer(boolean modifyContainer) {
-		this.modifyContainer = modifyContainer;
 	}
 	
 	public Component getComponent() {
 		return c;
 	}
+
 	public void setComponent(Component c) {
 		this.c = c;
-		containerType = false;
-	}
-	public void setComponent(Container c) {
-		this.c = c;
-		containerType = true;
-	}
-	
-	public boolean isContainer() {
-		return containerType;
 	}
 	
 	/**

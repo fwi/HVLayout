@@ -21,10 +21,6 @@ import static nl.fw.swing.hvlayout.CSizeUtils.multiply;
 public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends Component> 
 	extends BaseCSize3<CSIZE, CTYPE> {
 	
-	public static int MAX_WIDTH = HVSize.SCREEN_SIZE_TOTAL.width;
-	public static int MAX_HEIGHT = HVSize.SCREEN_SIZE_TOTAL.height;
-
-
 	@SuppressWarnings("unchecked")
 	@Override
 	protected CSIZE me() { return (CSIZE) this;	}
@@ -39,6 +35,9 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setMinWidth(w).setMaxWidth(w);
 	}
 
+	/** 
+	 * Sets all width sizes to button-width. 
+	 */
 	public CSIZE setFixedWidthButton() {
 		return setMinWidthButton().setMaxWidthButton();
 	}
@@ -50,10 +49,16 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setFixedWidth(multiply(pref().width, factor));
 	}
 
+	/** 
+	 * Sets all width sizes to button-width times given factor. 
+	 */
 	public CSIZE setFixedWidthButton(float factor) {
 		return setFixedWidth(getButtonWidth(factor));
 	}
 
+	/** 
+	 * Sets all width sizes to given width. 
+	 */
 	public CSIZE setFixedWidth(int w) {
 		return setMinWidth(w).setMaxWidth(w);
 	}
@@ -66,10 +71,16 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setMinHeight(h).setMaxHeight(h);
 	}
 
+	/** 
+	 * Sets all height sizes to line-height. 
+	 */
 	public CSIZE setFixedHeightLine() {
 		return setMinHeightLine().setMaxHeightLine();
 	}
 
+	/** 
+	 * Sets all height sizes to line-height multiplied by given factor. 
+	 */
 	public CSIZE setFixedHeightLine(float factor) {
 		return setFixedHeight(getLineHeight(factor));
 	}
@@ -81,6 +92,9 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setFixedHeight(multiply(pref().height, factor));
 	}
 
+	/** 
+	 * Sets all height sizes to given height. 
+	 */
 	public CSIZE setFixedHeight(int h) {
 		return setMinHeight(h).setMaxHeight(h);
 	}
@@ -116,10 +130,16 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setFixed(multiply(p.width, widthFactor), multiply(p.height, heightFactor)); 
 	}
 
+	/**
+	 * Sets all sizes to given width and height.
+	 */
 	public CSIZE setFixed(int w, int h) {
 		return setFixed(dim(w, h));
 	}
 
+	/**
+	 * Sets all sizes to given dimension.
+	 */
 	public CSIZE setFixed(Dimension d) {
 		return min(d).max(d).pref(d);
 	}
@@ -215,13 +235,13 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	 * @param width preferred width
 	 * @param minWidthFactor factor by which component width can shrink.
 	 * @param maxWidthFactor factor by which a component width can grow.
-	 * If 0.0f or less, maximum width is set to {@link #MAX_WIDTH}.
+	 * If 0.0f or less, maximum width is set to {@link HVSize#MAX_WIDTH}.
 	 * @param height the fixed height of the component
 	 */
 	public CSIZE setLineSize(int width, float minWidthFactor, float maxWidthFactor, int height) {
 		
 		int minWidth = shrink(width, minWidthFactor);
-		int maxWidth = (maxWidthFactor <= 0.0f ? MAX_WIDTH : grow(width, maxWidthFactor));
+		int maxWidth = (maxWidthFactor <= 0.0f ? HVSize.MAX_WIDTH : grow(width, maxWidthFactor));
 		return setLineSize(minWidth, width, maxWidth, height);
 	}
 
@@ -248,11 +268,16 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	/**
 	 * Sets an area of variable size with preferred size set to line-width times given factor
 	 * and line-height times given factor.  
+	 * See also {@link #setAreaSize(int, int, float, float)}.
 	 */
 	public CSIZE setAreaSize(float widthFactor, float heightFactor) {
 		return setAreaSize(getLineWidth(widthFactor), getLineHeight(heightFactor));
 	}
 
+	/**
+	 * Sets an area size of given width and height that can grow to screen-size and can shrink to a quarter of given sizes.
+	 * See also {@link #setAreaSize(int, int, float, float)}.
+	 */
 	public CSIZE setAreaSize(int width, int height) {
 		return setAreaSize(width, height, 4.0f, 0.0f);
 	}
@@ -263,9 +288,9 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	 * @param height preferred height
 	 * @param minFactor factor by which component can shrink.
 	 * <br>A minimum width less than button-width is ignored when preferred width is more than button-width.
-	 * <br>A minimum hieght less than line-height is ignored. 
+	 * <br>A minimum height less than line-height is ignored. 
 	 * @param maxFactor factor by which component can grow.
-	 * If 0.0f or less, maximum width and height is set to {@link #MAX_WIDTH} and {@link #MAX_HEIGHT}
+	 * If 0.0f or less, maximum width and height is set to {@link HVSize##MAX_WIDTH} and {@link HVSize##MAX_HEIGHT}
 	 */
 	public CSIZE setAreaSize(int width, int height, float minFactor, float maxFactor) {
 		
@@ -280,8 +305,8 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 			minHeight = props().getLineHeight();
 		if (height < minHeight)
 			height = minHeight + 1;
-		int maxWidth = (maxFactor <= 0.0f ? MAX_WIDTH : grow(width, maxFactor));
-		int maxHeight = (maxFactor <= 0.0f ? MAX_HEIGHT : grow(height, maxFactor));
+		int maxWidth = (maxFactor <= 0.0f ? HVSize.MAX_WIDTH : grow(width, maxFactor));
+		int maxHeight = (maxFactor <= 0.0f ? HVSize.MAX_HEIGHT : grow(height, maxFactor));
 		return min(minWidth, minHeight).pref(width, height).max(maxWidth, maxHeight);
 	}
 	
@@ -325,10 +350,16 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return d;
 	}
 	
+	/**
+	 * Aligns width to a button-width factor.
+	 */
 	public int alignWidth(int width) {
 		return (width + (props().getButtonWidth() - (width % props().getButtonWidth())));
 	}
 	
+	/**
+	 * Aligns height to a line-height factor.
+	 */
 	public int alignHeight(int height) {
 		return (height + (props().getLineHeight() - (height % props().getLineHeight())));
 	}

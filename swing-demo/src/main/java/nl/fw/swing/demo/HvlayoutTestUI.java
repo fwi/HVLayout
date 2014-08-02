@@ -138,7 +138,7 @@ public class HvlayoutTestUI extends JFrame {
 		
 		build();
 		pack();
-		setMaximumSize(new Dimension(CSize.MAX_WIDTH, CSize.MAX_HEIGHT));
+		setMaximumSize(new Dimension(HVSize.MAX_WIDTH, HVSize.MAX_HEIGHT));
 		setLocationByPlatform(true);
 		return this;
 	}

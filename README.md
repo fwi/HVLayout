@@ -18,7 +18,7 @@ much other components in the same window want to grow and shrink.
 <br/>Default component sizes are stored in ``HVSize`` and to apply these sizes to a component 
 ``CSize`` (which has a fluent API) can be used (and extended if need).
 For example, to create a button that does not grow or shrink:
-<br/>``new CSize().set(new JButton("Example")).setFixedSize();``
+<br/>``new CSize().set(new JButton("Example")).setFixedButtonSize();``
 <br/>and done.
 <br/>``CForm`` (also with a fluent API) is available to further assist in building and updating forms/content panes.
 

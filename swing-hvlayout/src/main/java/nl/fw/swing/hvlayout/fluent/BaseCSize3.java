@@ -16,6 +16,8 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	@Override
 	protected CSIZE me() { return (CSIZE) this;	}
 
+	/* *** Fixed size options *** */
+
 	/**
 	 * Sets minimum and maximum size to preferred size.
 	 * Equal to <code>setFixed(pref())</code>
@@ -67,47 +69,68 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	/* *** Shrink options *** */
 	
 	/**
-	 * Allow component to shrink by half of preferred width.
+	 * Allow component to shrink in width to half of the current preferred width.
 	 */
 	public CSIZE shrinkWidth() {
 		return shrinkWidth(0.5f);
 	}	
 	
+	/**
+	 * Allow component to shrink in width to given factor times the current preferred width.
+	 */
 	public CSIZE shrinkWidth(float factor) {
 		return setMinWidth(shrink(pref().width, factor));
 	}
 
 	/**
-	 * Allow component to shrink by half of preferred height.
+	 * Allow component to shrink in height by half of current preferred height.
 	 */
 	public CSIZE shrinkHeight() {
 		return shrinkWidth(0.5f);
 	}	
 	
+	/**
+	 * Allow component to shrink in height to given factor times the current preferred height.
+	 */
 	public CSIZE shrinkHeight(float factor) {
 		return setMinHeight(shrink(pref().height, factor));
 	}
 	
 	/* *** Grow options *** */
 
+	/**
+	 * Allow component to grow in width to two times the current preferred width.
+	 */
 	public CSIZE growWidth() {
 		return growWidth(2.0f);
 	}	
 	
+	/**
+	 * Allow component to grow in width to given factor times the current preferred width.
+	 */
 	public CSIZE growWidth(float factor) {
 		return setMaxWidth(grow(pref().width, factor));
 	}
 	
+	/**
+	 * Allow component to grow in height to two times the current preferred height.
+	 */
 	public CSIZE growHeight() {
 		return growHeight(2.0f);
 	}	
 	
+	/**
+	 * Allow component to grow in height to given factor times the current preferred height.
+	 */
 	public CSIZE growHeight(float factor) {
 		return setMaxHeight(grow(pref().height, factor));
 	}
 
 	/* *** Scale options *** */
 
+	/**
+	 * Multiply all sizes times the given factors for width and height.
+	 */
 	public CSIZE scale(float widthFactor, float heightFactor) {
 		
 		min(CSizeUtils.scale(min(), widthFactor, heightFactor));
@@ -116,10 +139,16 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 		return me();
 	}
 
+	/**
+	 * Multiply all width sizes times the given factor.
+	 */
 	public CSIZE scaleWidth(float factor) {
 		return scale(factor, 1.0f);
 	}
 
+	/**
+	 * Multiply all height sizes times the given factor.
+	 */
 	public CSIZE scaleHeight(float factor) {
 		return scale(1.0f, factor);
 	}
