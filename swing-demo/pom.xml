@@ -13,11 +13,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>nl.fw.swing</groupId>
-			<artifactId>swing-hvlayout</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>nl.fw.swing</groupId>
 			<artifactId>swing-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>

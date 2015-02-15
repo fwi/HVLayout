@@ -9,18 +9,27 @@ import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Field;
 import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
@@ -58,6 +67,14 @@ public class SwingUtils {
 	public static void setDefaultUILookAndFeel() {
 		
 		try {
+			// http://stackoverflow.com/questions/179955/how-do-you-enable-anti-aliasing-in-arbitrary-java-apps
+			// All these properties should already have an appropriate value, see also
+			// https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html#aaFonts
+			/*
+			System.setProperty("sun.java2d.xrender", "true");
+			System.setProperty("swing.aatext", "true");
+			System.setProperty("awt.useSystemAAFontSettings", "lcd");
+			*/
 			String lfClassName = UIManager.getSystemLookAndFeelClassName();
 			if (lfClassName.contains("Metal")) {
 				for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
@@ -70,7 +87,7 @@ public class SwingUtils {
 			UIManager.setLookAndFeel(lfClassName);
 			log.debug("Using look and feel " + lfClassName);
 		} catch (Exception e) {
-			log.debug("System look and feel not availalbe: " + e);
+			log.debug("System look and feel not available: " + e);
 		}
 	}
 
@@ -189,6 +206,18 @@ public class SwingUtils {
 		} 
 	}
 	
+	public static void applyOkCancelListener(JDialog dialog, JButton OK, JButton cancel, ActionListener listener) {
+		
+		dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		dialog.addWindowListener(new WindowCloseAdapter(cancel, listener));
+		dialog.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancel);
+		dialog.getRootPane().getActionMap().put(cancel, new KeyAction(cancel, listener));
+		dialog.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), OK);
+		dialog.getRootPane().getActionMap().put(OK, new KeyAction(OK, listener));
+		OK.addActionListener(listener);
+		cancel.addActionListener(listener);
+	}
+	
 	/**
 	 * Requesting focus in a Window should always be done last, after repainting etc.
 	 * This method calls {@link Component#requestFocusInWindow()} via "invokeLater" 
@@ -254,28 +283,42 @@ public class SwingUtils {
 
 	public static final Font borderFont = SwingUtils.getUIFont().deriveFont(10.0f);
 
-	public static JComponent addTitledBorder(JComponent c, String title) {
+	public static <T extends JComponent> T addTitledBorder(T c, String title) {
 		return addTitledBorder(c, title, Color.BLACK);
 	}
 	
-	public static JComponent addTitledBorder(JComponent c, String title, Color color) {
+	public static <T extends JComponent> T addTitledBorder(T c, String title, Color color) {
 		return addTitledBorder(c, title, color, 2, borderFont);
 	}
 
 	/**
 	 * @param color If null, the default Swing border is used.
 	 */
-	public static JComponent addTitledBorder(JComponent c, String title, Color color, int lineBorderSize, Font borderFont) {
+	public static <T extends JComponent> T addTitledBorder(T c, String title, Color color, int lineBorderSize, Font borderFont) {
 		
-		JComponent jc = (JComponent)c;
 		TitledBorder tb;
 		if (color == null) {
 			tb = new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, borderFont);
 		} else {
 			tb = new TitledBorder(new LineBorder(color, lineBorderSize), title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, borderFont);
 		}
-		jc.setBorder(tb);
-		return jc;
+		c.setBorder(tb);
+		return c;
+	}
+	
+	/**
+	 * If icon is an instance of {@link ImageIcon}, 
+	 * returns an icon scaled to the height of the component.
+	 * Else return the icon given.
+	 */
+	public static Icon scaleToHeight(JComponent c, Icon icon) {
+		
+		Icon sizedIcon = icon;
+		if (icon instanceof ImageIcon) {
+			int h = c.getPreferredSize().height - c.getInsets().top	- c.getInsets().bottom;
+			sizedIcon = new ImageIcon(((ImageIcon)icon).getImage().getScaledInstance(-1, h, Image.SCALE_SMOOTH));
+		}
+		return sizedIcon;
 	}
 
 	/**
@@ -343,6 +386,49 @@ public class SwingUtils {
 	public static void runLater(Runnable r) {
 		
 		EventQueue.invokeLater(new RunCatched(r));
+	}
+	
+	/** 
+	 * Uses the value returned via the component's getText() method to set a Mnemonic key.
+	 * The character following the first '&' charcater is used as Mnemonic key,
+	 * but this only works for characters in the range a..Z
+	 * If a Mnemonic key is found, the '&' character is removed from the text.
+	 * @param textComponent
+	 */
+	public static void setMnemonic(AbstractButton textComponent) {
+		
+		String label = textComponent.getText();
+		if (label == null || label.isEmpty() 
+				|| !label.contains("&")
+				|| label.indexOf('&') == label.length()-1) {
+			
+			return;
+		}
+		char ch = label.charAt(label.indexOf('&')+1);
+		if (!Character.isLetter(ch)) {
+			return;
+		}
+		int ke = getKeyEvent(ch);
+		if (ke != Integer.MIN_VALUE) {
+			label = label.substring(0, label.indexOf('&')) + label.substring(label.indexOf('&')+1, label.length());
+			textComponent.setText(label);
+			textComponent.setMnemonic(ke);
+		}
+	}
+	
+	/** 
+	 * Returns the KeyEvent-code (only for VK_a..Z).
+	 * If no key-event could be found, {@link Integer#MIN_VALUE} is returned. 
+	 */
+	public static int getKeyEvent(Character ch) {
+		
+		int ke = Integer.MIN_VALUE;
+		try {
+			Field f = KeyEvent.class.getField("VK_" + Character.toUpperCase(ch));
+		    f.setAccessible(true);
+		    ke = (Integer) f.get(null); 
+		} catch (Exception e) {}
+		return ke;
 	}
 	
 }

@@ -41,7 +41,7 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	public CSIZE setFixedWidthButton() {
 		return setMinWidthButton().setMaxWidthButton();
 	}
-
+	
 	/** 
 	 * Sets all width sizes to current preferred width multiplied by given factor. 
 	 */
@@ -99,6 +99,12 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 		return setMinHeight(h).setMaxHeight(h);
 	}
 
+	/** 
+	 * Sets a fixed size for a square (width equal to line-height). 
+	 */
+	public CSIZE setFixedSquareSize() {
+		return setFixed(props().getLineHeight(), props().getLineHeight());
+	}
 
 	/**
 	 * Sets a fixed size for a component to button-width and line-height.
@@ -290,7 +296,7 @@ public class BaseCSize4 <CSIZE extends BaseCSize4<CSIZE, CTYPE>, CTYPE extends C
 	 * <br>A minimum width less than button-width is ignored when preferred width is more than button-width.
 	 * <br>A minimum height less than line-height is ignored. 
 	 * @param maxFactor factor by which component can grow.
-	 * If 0.0f or less, maximum width and height is set to {@link HVSize##MAX_WIDTH} and {@link HVSize##MAX_HEIGHT}
+	 * If 0.0f or less, maximum width and height is set to {@link HVSize#MAX_WIDTH} and {@link HVSize#MAX_HEIGHT}
 	 */
 	public CSIZE setAreaSize(int width, int height, float minFactor, float maxFactor) {
 		

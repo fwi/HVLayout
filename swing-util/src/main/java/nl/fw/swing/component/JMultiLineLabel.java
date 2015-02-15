@@ -29,19 +29,12 @@ public class JMultiLineLabel extends JTextArea {
 		setEditable(false);
 		setLineWrap(false);
 		setWrapStyleWord(true);
-		if (font != null) {
-			setFont(font);
+		if (font == null) {
+			// JTextArea shows monospaced font by default.
+			font = SwingUtils.getUIFont();
 		}
-		boolean monospaced = (font == null ? false : 
-			font.getName().equals(Font.MONOSPACED));
-		if (monospaced) {
-			if (font == null) { 
-				setFont(SwingUtils.getUIFontMonoSpaced());
-			}
-		} else {
-			if (font == null) { 
-				setFont(SwingUtils.getUIFont());
-			}
+		setFont(font);
+		if (!font.getName().equals(Font.MONOSPACED)) {
 			setOpaque(false);
 			setToolTipText(text);
 		}

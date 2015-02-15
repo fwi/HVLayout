@@ -1,7 +1,6 @@
 package nl.fw.swing.component;
 
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 
@@ -9,6 +8,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+
+import nl.fw.swing.SwingUtils;
 
 /**
  * A check-box that shows a tooltip when text is truncated
@@ -101,7 +102,7 @@ public class TCheckBox extends JCheckBox {
 
     	originalIcon = icon;
 		if (icon != null && icon instanceof ImageIcon) {
-			rescaleIcon();
+    		super.setIcon(SwingUtils.scaleToHeight(this, originalIcon));
 			if (getText() == null || getText().length() == 0 || getText().equals(" ")) {
 				setToolTipText(((ImageIcon)icon).getDescription());
 			}
@@ -113,17 +114,8 @@ public class TCheckBox extends JCheckBox {
     @Override
     public void setPreferredSize(Dimension d) {
     	super.setPreferredSize(d);
-    	rescaleIcon();
+		if (originalIcon != null && originalIcon instanceof ImageIcon) {
+    		super.setIcon(SwingUtils.scaleToHeight(this, originalIcon));
+		}
     }
-
-    public void rescaleIcon() {
-    	
-    	if (originalIcon != null && originalIcon instanceof ImageIcon) {
-			// Tried using borderSize here but that has the same effect as calling getInsets.
-			int h = getPreferredSize().height - getInsets().top	- getInsets().bottom;
-			ImageIcon sizedIcon = new ImageIcon(((ImageIcon)originalIcon).getImage().getScaledInstance(h, h, Image.SCALE_SMOOTH));
-			super.setIcon(sizedIcon);
-    	}
-    }
-    
 }

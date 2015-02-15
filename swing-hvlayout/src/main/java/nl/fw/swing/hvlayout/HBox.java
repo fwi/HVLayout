@@ -126,13 +126,12 @@ public class HBox extends JComponent implements Scrollable {
 	/**
 	 * This (overloaded) convenience method allows adding components in the middle of
 	 * a list of components (at the place indicated by index).
-	 * @see java.awt.Container#add(java.awt.Component, int)
+	 * @param index if -1 component is added at he end of the components-list.
+	 * @see java.awt.Container#add(java.awt.Component, Object, int)
 	 */
+	@Override
 	public Component add(final Component comp, final int index) {
-		// The index is used as constraint and passed on to super().
-		// This makes it easier to insert a component in the HLayout
-		// or VLayout list of components.
-		super.add(comp, Integer.valueOf(index));
+		super.add(comp, Integer.valueOf(index), index);
 		return comp;
 	}
 }

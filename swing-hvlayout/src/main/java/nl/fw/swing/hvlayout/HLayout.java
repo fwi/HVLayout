@@ -32,7 +32,7 @@ public class HLayout extends HVLayout {
 	 * Creates a layout manager that aligns components in the reading direction.
 	 */
 	public HLayout(HVSize props) {
-		this(null, LEADING);
+		this(props, LEADING);
 	}
 
 	/**
