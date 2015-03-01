@@ -2,31 +2,49 @@ package nl.fw.swing.renderer;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import nl.fw.swing.SwingUtils;
+
 @SuppressWarnings("serial")
 public class TableCellDateRenderer extends DefaultTableCellRenderer {
 
-	public static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-
-	protected Font font;
+	protected DateFormat dateFormat;
 	
 	public TableCellDateRenderer() {
-		this(null, TRAILING);
+		this(SwingUtils.getUIFontMonoSpaced());
 	}
 
-	public TableCellDateRenderer(Font font) {
-		this(font, TRAILING);
+	public TableCellDateRenderer(Font f) {
+		this(f, TRAILING);
 	}
 
-	public TableCellDateRenderer(Font font, int orientation) {
+	public TableCellDateRenderer(Font f, int orientation) {
 		super();
-		this.font = font;
+		if (f != null) {
+			setFont(f);
+		}
 		setHorizontalAlignment(orientation);
+		initDateFormat();
+	}
+	
+	public void initDateFormat() {
+		
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		setDateFormat(df);
+	}
+
+	public void setDateFormat(DateFormat df) {
+		this.dateFormat = df;
+	}
+	
+	public DateFormat getDateFormat() {
+		return dateFormat;
 	}
 
 	@Override
@@ -34,14 +52,11 @@ public class TableCellDateRenderer extends DefaultTableCellRenderer {
 			final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		if (font != null) {
-			setFont(font);
-		}
-		setText(getText((Date) value));
+		setText(getDateText((Date) value));
 		return this;
 	}
 	
-	public String getText(Date d) {
-		return dateTimeFormat.format(d);
+	public String getDateText(Date d) {
+		return getDateFormat().format(d);
 	}
 }

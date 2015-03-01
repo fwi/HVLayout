@@ -1,7 +1,6 @@
 package nl.fw.swing.demo;
 
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class SplitPaneDemo extends JFrame {
 		splitPane.setResizeWeight(0.25d);
 		splitPane.setContinuousLayout(true);
 		
-		form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		form.add(splitPane);
 		setContentPane(form.getRoot());
 		pack();

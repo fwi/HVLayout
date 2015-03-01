@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 import javax.swing.JTextArea;
 import javax.swing.JToolTip;
@@ -59,7 +61,52 @@ public class JMultiLineLabel extends JTextArea {
 			}
 		});
 	}
+	
+	/**
+	 * Preferred size calculated from display test.
+	 * <br>Only works if text is pre-formatted with line-breaks.
+	 */
+	public Dimension getPreferredSizeDisplay() {
+		
+		int width = getPreferredDisplayWidth();
+		int height = getFontMetrics(getFont()).getHeight() * getTextLines() 
+				+ getInsets().top + getInsets().bottom;
+		return new Dimension(width, height);
+	}
 
+	/**
+	 * Width calculated from widest text-line plus insets.
+	 * <br>Only works if text is pre-formatted with line-breaks.
+	 */
+	public int getPreferredDisplayWidth() {
+		
+		int maxTextWidth = 0;
+		try (StringReader reader = new StringReader(getText());
+				BufferedReader lineReader = new BufferedReader(reader)) {
+			String l = null;
+			while((l = lineReader.readLine()) != null) {
+				int textWidth = getFontMetrics(getFont()).stringWidth(l);
+				maxTextWidth = Math.max(maxTextWidth, textWidth);
+			}
+		} catch (Exception ignored) {}
+		int displayWidth = maxTextWidth + getInsets().left + getInsets().right;
+		return displayWidth;
+	}
+	
+	/**
+	 * Number of text-lines in text.
+	 */
+	public int getTextLines() {
+		
+		int count = 0;
+		try (StringReader reader = new StringReader(getText());
+				BufferedReader lineReader = new BufferedReader(reader)) {
+			while(lineReader.readLine() != null) {
+				count++;
+			}
+		} catch (Exception ignored) {}
+		return count;
+	}
 
 	/**
 	 * Overload to use JMultiLineToolTip which shows text just

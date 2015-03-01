@@ -1,7 +1,5 @@
 package nl.fw.swing.demo;
 
-import java.awt.Insets;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -41,7 +39,7 @@ public class TableSortDemo extends JFrame {
 		table.setRowSorter(new TableRowSorter<TableSortDemoModel>(tmodel));
 		table.setTableHeader(new TableSortHeader(table.getColumnModel()));
 
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		form.add(new JMultiLineLabel("Left click table header to set first sort column, "
 				+ "\nright click to add another sort column "
 				+ "\nor right click again to reverse sort order." ));

@@ -60,7 +60,7 @@ public class RelativeToWindowSize extends JFrame implements ListSelectionListene
 	public RelativeToWindowSize build() {
 		
 		CSize cs = new CSize();
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)), cs);
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS), cs);
 		addTitledBorder(form.get(), "Vertical box", Color.BLACK);
 		form.add(new JScrollPane(
 					tfield = new JTextArea("Value that changes with value choosen from list.\nhttp://stackoverflow.com/questions/24462297/layout-relative-to-screensize/")
@@ -92,7 +92,7 @@ public class RelativeToWindowSize extends JFrame implements ListSelectionListene
 	
 	private Component createButton(CSize cs, String text) {
 		// For purpose of demo, let button shrink in width.
-		return cs.set(new TButton(text)).setFixedButtonSize().shrinkWidth(0.33f).get();
+		return cs.set(new TButton(text)).setButtonSize().shrinkWidth(0.33f).get();
 	}
 
 	@Override

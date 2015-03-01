@@ -96,14 +96,14 @@ public class BaseCSize2<CSIZE extends BaseCSize2<CSIZE, CTYPE>, CTYPE extends Co
 	/**
 	 * Sets min-size to button width and line height, updates other sizes if needed.
 	 */
-	public CSIZE setMinButtonSize() { 
+	public CSIZE setMinButton() { 
 		return setMinWidthButton().setMinHeightLine(); 
 	}
 		
 	/**
 	 * Sets min-size to button width and line height, scaled by given factors. Updates other sizes if needed.
 	 */
-	public CSIZE setMinButtonSize(float widthFactor, float heightFactor) {
+	public CSIZE setMinButton(float widthFactor, float heightFactor) {
 		return setMinWidthButton(widthFactor).setMinHeightLine(heightFactor);
 	}
 
@@ -205,14 +205,14 @@ public class BaseCSize2<CSIZE extends BaseCSize2<CSIZE, CTYPE>, CTYPE extends Co
 	/**
 	 * Sets pref-size to button width and line height, updates other sizes if needed.
 	 */
-	public CSIZE setPrefButtonSize() {
+	public CSIZE setPrefButton() {
 		return setPrefWidthButton().setPrefHeightLine();
 	}
 	
 	/**
 	 * Sets pref-size to button width and line height, scaled by given factors. Updates other sizes if needed.
 	 */
-	public CSIZE setPrefButtonSize(float widthFactor, float heightFactor) {
+	public CSIZE setPrefButton(float widthFactor, float heightFactor) {
 		return setPrefWidthButton(widthFactor).setPrefHeightLine(heightFactor);
 	}
 
@@ -316,14 +316,14 @@ public class BaseCSize2<CSIZE extends BaseCSize2<CSIZE, CTYPE>, CTYPE extends Co
 	/**
 	 * Sets maximum height to button width and line heigth, updates other sizes if needed.
 	 */
-	public CSIZE setMaxButtonSize() {
+	public CSIZE setMaxButton() {
 		return setMaxWidthButton().setMaxHeightLine();
 	}
 	
 	/**
 	 * Sets maximum height to button width and line heigth scaled by given factors, c
 	 */
-	public CSIZE setMaxButtonSize(float widthFactor, float heightFactor) {
+	public CSIZE setMaxButton(float widthFactor, float heightFactor) {
 		return setMaxWidthButton(widthFactor).setMaxHeightLine(heightFactor);
 	}
 

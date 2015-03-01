@@ -3,13 +3,13 @@ package nl.fw.swing;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -43,25 +43,53 @@ public class SwingUtils {
 
 	private static final Logger log = LoggerFactory.getLogger(SwingUtils.class);
 	
-	public static Dimension SCREEN_SIZE_PRIMARY = Toolkit.getDefaultToolkit().getScreenSize();
-	public static Dimension SCREEN_SIZE_TOTAL = calculateTotalScreenSize();
+	static {
+		calculateScreenSizes();
+	}
+	
+	/**
+	 * The bounds of the primary screen (adjusted for insets).
+	 */
+	public static Rectangle SCREEN_SIZE_PRIMARY;
+	
+	/**
+	 * The virtual bounds of all screens together (adjusted for insets).
+	 */
+	public static Rectangle SCREEN_SIZE_TOTAL;
 
-	public static Dimension calculateTotalScreenSize() {
+	/**
+	 * Updates {@link #SCREEN_SIZE_PRIMARY } and {@link #SCREEN_SIZE_TOTAL}
+	 */
+	public static void calculateScreenSizes() {
 		
-		Rectangle virtualBounds = new Rectangle();
+		Rectangle totalBounds = new Rectangle();
+		Rectangle primaryBounds = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
 		for (int j = 0; j < gs.length; j++) { 
 			GraphicsDevice gd = gs[j];
+			if (gd == ge.getDefaultScreenDevice()){
+				primaryBounds = new Rectangle();
+			}
 			GraphicsConfiguration[] gc = gd.getConfigurations();
 			for (int i = 0; i < gc.length; i++) {
-				virtualBounds =	virtualBounds.union(gc[i].getBounds());
+				Rectangle bounds = gc[i].getBounds();
+				Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gc[i]);
+				bounds.x += screenInsets.left;
+			    bounds.y += screenInsets.top;
+			    bounds.height -= screenInsets.bottom;
+			    bounds.width -= screenInsets.right;
+			    totalBounds =totalBounds.union(bounds);
+			    if (primaryBounds != null) {
+			    	primaryBounds = primaryBounds.union(bounds);
+			    }
+			}
+			if (primaryBounds != null) {
+				SCREEN_SIZE_PRIMARY = primaryBounds;
+				primaryBounds = null;
 			}
 		}
-		Dimension d = new Dimension();
-		d.width = virtualBounds.width;
-		d.height = virtualBounds.height;
-		return d;
+		SCREEN_SIZE_TOTAL = totalBounds;
 	}
 	
 	public static void setDefaultUILookAndFeel() {
@@ -431,4 +459,62 @@ public class SwingUtils {
 		return ke;
 	}
 	
+	/**
+	 * Unit-size set to 1024.
+	 * Copied from http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+	 */
+	public static String humanReadableByteCount(long bytes) {
+		return humanReadableByteCount(bytes, false);
+	}
+
+	/**
+	 * Copied from http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+	 * @param si if true 1000 is used as unit, else 1024.
+	 */
+	public static String humanReadableByteCount(long bytes, boolean si) {
+
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit) return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+	
+	/**
+	 * Calls {@link #ensureVisibleBounds(Window, boolean)} with intersect-only set to false.
+	 */
+	public static void ensureBoundsOnDisplay(Window w) {
+		ensureVisibleBounds(w, false);
+	}
+
+	/**
+	 * Calls {@link #ensureVisibleBounds(Window, boolean)} with intersect-only set to true.
+	 */
+	public static void ensureBoundsPartialOnDisplay(final Window w) {
+		ensureVisibleBounds(w, true);
+	}
+
+	/**
+	 * Checks that the window-bounds are (partially) within {@link #SCREEN_SIZE_TOTAL}.
+	 * This is needed in case window-bounds from loaded preferences are used but user has changed from multi-display
+	 * to single-display. Any window on the second display will show off-screen and is not visible.
+	 * <br>If window-bounds are (partially) outside the display-screen,
+	 * the window is packed (size set to preferred size) and location is set to middle of the screen. 
+	 * @param w The window to check the bounds on.
+	 * @param intersectOnly If true, window bounds only need to overlap partially with display-screen.
+	 */
+	public static void ensureVisibleBounds(final Window w, final boolean intersectOnly) {
+		
+		runLater(new Runnable() {
+			@Override public void run() {
+				Rectangle r = w.getBounds();
+				boolean validBounds = (intersectOnly ? SCREEN_SIZE_TOTAL.intersects(r) : SCREEN_SIZE_TOTAL.contains(r));
+				if (!validBounds) {
+					w.pack();
+					w.setLocationRelativeTo(null);
+				}
+			}
+		});
+	}
+
 }

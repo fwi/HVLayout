@@ -2,6 +2,7 @@ package nl.fw.swing.hvlayout;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Insets;
 
 import nl.fw.swing.hvlayout.fluent.BaseCForm;
 import nl.fw.swing.hvlayout.fluent.BaseCSize3;
@@ -21,6 +22,14 @@ import nl.fw.swing.hvlayout.fluent.BaseCSize4;
  */
 public class CForm extends BaseCForm<CForm, CSize, Component> {
 
+	/**
+	 * The root-level box in a content-pane needs insets to keep text from sticking
+	 * to the edges. The insets here give components a little distance from the window edges/borders.
+	 * <br>Example code: {@code CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));}
+	 *  
+	 */
+	public static Insets MAIN_BOX_INSETS = new Insets(2, 4, 2, 4);
+	
 	public CForm() {
 		this(null, null);
 	}

@@ -1,7 +1,5 @@
 package nl.fw.swing.demo;
 
-import java.awt.Insets;
-
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -38,14 +36,14 @@ public class CustomHeightDemo extends JFrame {
 	
 	public CustomHeightDemo build() {
 		
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		CSize cs = form.csize();
 		
 		form.add(new TLabel("Buttons with font-size derived sizes.")).csize().setLineSize();
 
 		form.addChild(new HBox());
 		
-		form.add(new TButton("Default")).csize().setFixedButtonSize();
+		form.add(new TButton("Default")).csize().setButtonSize();
 		
 		TButton b = new TButton("Larger");
 		

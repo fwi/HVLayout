@@ -11,7 +11,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 
 import nl.fw.swing.component.JMultiLineLabel;
 import nl.fw.swing.component.TButton;
+import nl.fw.swing.component.TCheckBox;
 import nl.fw.swing.component.TLabel;
 import nl.fw.swing.hvlayout.CForm;
 import nl.fw.swing.hvlayout.HBox;
@@ -30,50 +30,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A modal dialog for selecting a font size and type. The selected font size and
- * type are stored in Settings (via Settings.defaultFontSize and
- * Settings.defaultFontName) and the UI is updated.
+ * A modal dialog for selecting a font size and type.
  * When a different font size is selected, a UI update is usually only
  * partially succesfull. A complete restart (exit and launch again) is required
  * to re-draw the existing windows.
  * <p> 
- * Settings.setDefaultFont() is called during startup so that the font
- * size and type selected in this dialog is applied during startup. Note
- * that if only a different font size is selected, all font types are
- * unchanged (i.e. whatever UIManager has loaded as font type remains, just
- * the size is updated). 
- * <p>
  * Note that many people require a large font to easily read the text shown
  * on screen. In fact, not being able to show text using a large font
  * could seriously impact the usability of your program. Many people have
  * less then perfect eyesight and a big font can prevent many sore eyes and
  * headaches. 
  * <p>
- * FontSelector uses the hvlayout package and the OkCancelDialog.
- * <br> The FontSelector dialog can be resized, see the method 
- * buildSelectorPane() on how this is achieved using the hvlayout package.
- * <br> This class can be executed stand-alone to get an impression of how this
- * font selection dialog looks (see bin\demofontselector.bat).
- * <br> The example text is loaded via Labels since UTF-8 is required to 
- * load the various international text examples. I found that on Windows, 
- * only Dialog, Monospaced and (Sans)Serif font type could display all languages.
- * <p>
  * Part of the source code was copied from 
  * <br>http://www.java2s.com/Code/Java/Tiny-Application/Afontselectiondialog.htm
   * @author Fred
  *
  */
-public class FontSelector implements ActionListener,
+public class FontSelectorDialog implements ActionListener,
 									ListSelectionListener{
 
+	/**
+	 * If this source file is not properly edited with UTF-8 encoding,
+	 * this test-text will become unusable.
+	 */
 	public static String TEST_TEXT = "English: The Quick Brown Fox Jumped Over The Lazy Dog \n" +
-			"Japanese: 日本語 \n" + 
-			"Korean: 한글 \n" +
-			"Simplified Chinese: 简体汉字，汉字(简体) \n" +
-			"Traditional Chinese: 繁體中文, 中文(繁體) \n" +
-			"European: Ç€ü¿é \n" +
-			"Hebrew: אְבֱּגֲדֳהִוֵזֶחַטָיֹךְכֱּלֲםֳמִןֻנסעףפְץֱצֲקֳרִשת \n" +
-			"Arabic: حذرت السلطات \n";
+			"Japanese: 日本語 \n" + // "Japanese"
+			"Korean: 한글 \n" + // "Hangul" - the Korean alphabet
+			"Simplified Chinese: 简体汉字，汉字(简体) \n" + // "Simplified Chinese characters, Chinese (Simplified)"
+			"Traditional Chinese: 繁體中文, 中文(繁體) \n" + // "Traditional Chinese, Chinese (Traditional)"
+			"European: Ç€ü¿é \n" + // Various European characters.
+			"Hebrew: אְבֱּגֲדֳהִוֵזֶחַטָיֹךְכֱּלֲםֳמִןֻנסעףפְץֱצֲקֳרִשת \n" + // Alphabet ? "Abgdaosehtichclmmnnsa'fftztzkrst"
+			"Arabic: الحروف العربية \n"; // "Arabic characters"
 
 	public static final String FONT_SIZE_NAMES[] = { "8", "10", "11", "12", "14", "16", "18",
 	      "20", "24", "30", "36", "40", "48", "60", "72" };
@@ -84,7 +71,8 @@ public class FontSelector implements ActionListener,
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private JList<String> fontSizeList, fontNameList;
-	private JButton ok, cancel, reset;
+	private JButton ok, cancel;
+	private TCheckBox resetFont, sizeOnly;
 	private boolean cancelled;
 	private JTextArea exampleText;
 	private JScrollPane exampleTextScroller;
@@ -101,7 +89,8 @@ public class FontSelector implements ActionListener,
 		
 		switch (labelKey) {
 		case "WindowTitle": return "Font selector";
-		case "ResetFont": return "Reset font";
+		case "ResetFont": return "Reset font to system default";
+		case "SizeOnly": return "Use selected font size only, ignore font name";
 		case "TestText": return TEST_TEXT;
 		case "FontName": return "Font name";
 		case "FontSize": return "Font size";
@@ -117,48 +106,51 @@ public class FontSelector implements ActionListener,
 	/**
 	 * Loads text and configures components.
 	 */
-	public void build() {
+	public FontSelectorDialog build() {
 		
-		CForm form = new CForm(mainPane = new VBox());
-		form.add(new JLabel(getLabel("FontMessage"))).csize().setLineSize().setPrefWidthButton(6.0f);
-		reset = new TButton(getLabel("ResetFont"));
-		reset.addActionListener(this);
-		form.add(reset).csize().setFixedButtonSize();
+		CForm form = new CForm(mainPane = new VBox(CForm.MAIN_BOX_INSETS));
+		
+		JMultiLineLabel jml;
+		jml = new JMultiLineLabel(getLabel("FontMessage"));
+		form.add(jml).csize().setPref(jml.getPreferredSizeDisplay()).shrinkSize();
+		form.add(resetFont = new TCheckBox(getLabel("ResetFont"))).csize().setLineSize();
+		form.add(sizeOnly = new TCheckBox(getLabel("SizeOnly"))).csize().setLineSize();
 		
 		form.addChild(new HBox());
 		form.addChild(new VBox());
-		form.add(new TLabel(getLabel("FontSize"), HBox.TRAILING)).csize().setFixedButtonSize();
+		form.add(new TLabel(getLabel("FontSize"), HBox.CENTER)).csize().setButtonSize();
 		fontSizeList = new JList<String>(FONT_SIZE_NAMES);
 		fontSizeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fontSizeList.addListSelectionListener(this);
-		form.add(new JScrollPane(fontSizeList)).csize().setAreaSize(1.0f, 10.0f).setFixedHeight();
+		form.add(new JScrollPane(fontSizeList)).csize()
+			.setAreaSize(0.5f, 6.0f).setMinHeightLine(3.0f).setFixedWidth().setMaxHeightLine(10.0f);
+
 		form.up().addChild(new VBox());
-		form.add(new TLabel(getLabel("FontName"), HBox.TRAILING)).csize().setFixedButtonSize();
 		
-		// For JDK 1.1: returns about 10 names (Serif, SansSerif, etc.)
-	    // fontList = toolkit.getFontList();
-	    // For JDK 1.2: a much longer list; most of the names that come
-	    // with your OS (e.g., Arial), plus the Sun/Java ones (Lucida,
-	    // Lucida Bright, Lucida Sans...)
+		form.add(new TLabel(getLabel("FontName"), HBox.CENTER)).csize().setButtonSize();
 	    fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 	        .getAvailableFontFamilyNames();
 	    fontNameList = new JList<String>(fontNames);
 	    fontNameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    fontNameList.addListSelectionListener(this);
 	    // fontNameList.setCellRenderer(new FontNameCellRenderer());
-		form.add(new JScrollPane(fontNameList)).csize().setAreaSize(1.0f, 10.0f).setFixedHeight();
+		form.add(new JScrollPane(fontNameList)).csize()
+			.setAreaSize(1.0f, 6.0f).setMinHeightLine(3.0f).setMaxWidth(1.5f).setMaxHeightLine(10.0f);
 		form.up().up();
 		
-		form.add(new JMultiLineLabel(getLabel("FontMessageText"))).csize().setAreaSize().setPrefHeightLine(2.0f);
+		jml = new JMultiLineLabel(getLabel("FontMessageText"));
+		form.add(jml).csize().setPref(jml.getPreferredSizeDisplay()).shrinkSize();
 		exampleTextScroller = new JScrollPane(exampleText = new JTextArea(getLabel("TestText")));
 		exampleText.setEditable(false);
 		exampleText.setOpaque(true);
-		form.add(exampleTextScroller).csize().setAreaSize().setPrefHeightLine(6.0f);
+		form.add(exampleTextScroller).csize()
+			.setAreaSize().setPrefHeightLine(7.0f);
 		
 		form.addChild(new HBox(HBox.TRAILING));
-		form.add(ok = new TButton(getLabel("OK"))).csize().setFixedButtonSize();
-		form.add(cancel = new TButton(getLabel("Cancel"))).csize().setFixedButtonSize();
+		form.add(ok = new TButton(getLabel("OK"))).csize().setButtonSize();
+		form.add(cancel = new TButton(getLabel("Cancel"))).csize().setButtonSize();
 		form.up();
+		return this;
 	}
 	
 	/**
@@ -216,14 +208,25 @@ public class FontSelector implements ActionListener,
 	 * True if font selection was cancelled.
 	 */
 	public boolean wasCancelled() { return cancelled; }
+	
+	/**
+	 * True if font should be reset to system defaults.
+	 */
+	public boolean isResetFont() { return resetFont.isSelected(); }
 
 	/**
-	 * The selected font size. See also {@link #wasCancelled()}.
+	 * True if onlu font size should be used and font name ignored.
+	 */
+	public boolean isSizeOnly() { return sizeOnly.isSelected(); }
+		
+
+	/**
+	 * The selected font size. See also {@link #wasCancelled()} and {@link #isResetFont()}.
 	 */
 	public int getSelectedFontSize() { return selectedFontSize; }
 
 	/**
-	 * The selected font (family) name. See also {@link #wasCancelled()}.
+	 * The selected font (family) name. See also {@link #wasCancelled()} and {@link #isSizeOnly()}.
 	 */
 	public String getSelectFontName() { return selectedFontName; }
 	
@@ -251,8 +254,6 @@ public class FontSelector implements ActionListener,
 		if (as == cancel) {
 			cancelled = true;
 			dialog.setVisible(false);
-		} else if (as == reset) {
-			selectDefaultFont();
 		} else if (as == ok) {
 			// SwingUtils.setUIFont(new Font(selectedFontName, Font.PLAIN, selectedFontSize));
 			dialog.setVisible(false);
@@ -311,7 +312,11 @@ public class FontSelector implements ActionListener,
 		SwingUtils.setDefaultUILookAndFeel();
 		SwingUtils.runLater(new Runnable() {
 			@Override public void run() {
-				new FontSelector().show(null, null);
+				
+				FontSelectorDialog fs = new FontSelectorDialog();
+				fs.show(null, null);
+				System.out.println("Reset font: " + fs.isResetFont() + ", size only: " + fs.isSizeOnly());
+				System.out.println("Font size: " + fs.getSelectedFontSize() + ", font name: " + fs.getSelectFontName());
 			}
 		});
 	}

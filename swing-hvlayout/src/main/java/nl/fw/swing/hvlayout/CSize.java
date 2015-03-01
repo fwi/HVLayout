@@ -15,7 +15,7 @@ import nl.fw.swing.hvlayout.fluent.*;
  * @author fred
  *
  */
-public class CSize extends BaseCSize4<CSize, Component> {
+public class CSize extends BaseCSize5<CSize, Component> {
 
 	private static CSize defaultInstance = new CSize();
 	

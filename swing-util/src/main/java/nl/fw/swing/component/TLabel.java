@@ -56,14 +56,25 @@ public class TLabel extends JLabel {
 	 * Copied and modified from
 	 * http://forum.java.sun.com/thread.jspa?threadID=675342&messageID=3943542
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		
 		String text = super.getToolTipText();
 		if (!" ".equals(text)) return text;
-		text = getText();
-		int textWidth = getFontMetrics(getFont()).stringWidth(text);
 		int iconWidth = (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
 		int textSpace = getWidth() - iconWidth - getInsets().left - getInsets().right;
+		int textWidth = getFontMetrics(getFont()).stringWidth(getText());
 		return (textWidth > textSpace ? text : null);
+	}
+	
+	/**
+	 * Width calculated from text-width, icon-width and insets.
+	 */
+	public int getDisplayWidth() {
+		
+		int textWidth = getFontMetrics(getFont()).stringWidth(getText());
+		int iconWidth = (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
+		int displayWidth = textWidth + iconWidth + getInsets().left + getInsets().right;
+		return displayWidth;
 	}
 }

@@ -53,7 +53,7 @@ public class DummyTestFrame extends JFrame {
 	public DummyTestFrame build() {
 		
 		CSize cs = new CSize();
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		
 		form.addChild(new HBox());
 		form.add(new JTextField("Leading text line unlimited width")).csize().setLineSize().setPrefWidth(2.0f);
@@ -68,7 +68,7 @@ public class DummyTestFrame extends JFrame {
 		createSpacedBordered(boxSpaced);
 		form.addChild(boxSpaced);
 		TLabel l = new TLabel("A label", HBox.TRAILING);
-		cs.set(l).setFixedButtonSize().setFixedWidth(0.3f);
+		cs.set(l).setButtonSize().setFixedWidth(0.3f);
 		form.add(cs.get());
 		JTextField tf = new JTextField("A centered text centered");
 		cs.set(tf).setLineSize().setPrefWidth(3.0f);
@@ -76,7 +76,7 @@ public class DummyTestFrame extends JFrame {
 
 		form.up().addChild(new HBox());
 		l = new TLabel("A label", HBox.TRAILING);
-		cs.set(l).setFixedButtonSize();
+		cs.set(l).setButtonSize();
 		form.add(cs.get());
 		tf = new JTextField("A text field A text field A text field A text field A text field A text field A text field");
 		cs.set(tf).setLineSize();
@@ -87,14 +87,14 @@ public class DummyTestFrame extends JFrame {
 		
 		form.up().addChild(new HBox());
 		l = new TLabel("B label", HBox.TRAILING);
-		cs.set(l).setFixedButtonSize();
+		cs.set(l).setButtonSize();
 		form.add(cs.get());
 		tf = new JTextField("B text field A text field A text field A text field A text field A text field A text field");
 		cs.set(tf).setLineSize();
 		form.add(cs.get());
 		
 		l = new TLabel("BA label", HBox.TRAILING);
-		cs.set(l).setFixedButtonSize();
+		cs.set(l).setButtonSize();
 		form.add(cs.get());
 		tf = new JTextField("BA text field A text field A text field A text field A text field A text field A text field");
 		cs.set(tf).setLineSize();
@@ -112,7 +112,7 @@ public class DummyTestFrame extends JFrame {
 
 		form.addChild(new HBox());
 		for (int i = 0; i < 5; i++) {
-			form.add(cs.set(new TButton("Button " + i)).setFixedButtonSize().get());
+			form.add(cs.set(new TButton("Button " + i)).setButtonSize().get());
 		}
 		
 		form.up();

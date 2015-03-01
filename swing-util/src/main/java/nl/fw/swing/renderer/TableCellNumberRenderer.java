@@ -9,22 +9,15 @@ import java.text.NumberFormat;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import nl.fw.swing.SwingUtils;
+
 @SuppressWarnings("serial")
 public class TableCellNumberRenderer extends DefaultTableCellRenderer {
 
-	public static NumberFormat numberFormat;
-	static {
-		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-		dfs.setGroupingSeparator(' ');
-		DecimalFormat df = new DecimalFormat();
-		df.setDecimalFormatSymbols(dfs);
-		numberFormat = df;
-	}
-
-	protected Font font;
+	protected NumberFormat numberFormat;
 	
 	public TableCellNumberRenderer() {
-		this(null, TRAILING);
+		this(SwingUtils.getUIFontMonoSpaced());
 	}
 
 	public TableCellNumberRenderer(Font font) {
@@ -33,24 +26,41 @@ public class TableCellNumberRenderer extends DefaultTableCellRenderer {
 
 	public TableCellNumberRenderer(Font f, int orientation) {
 		super();
-		this.font = f;
+		if (f != null) {
+			setFont(f);
+		}
 		setHorizontalAlignment(orientation);
+		initNumberFormat();
 	}
-
+	
+	public void initNumberFormat() {
+		
+		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		dfs.setGroupingSeparator(' ');
+		DecimalFormat df = new DecimalFormat();
+		df.setDecimalFormatSymbols(dfs);
+		setNumberFormat(df);
+	}
+	
+	public void setNumberFormat(NumberFormat nf) {
+		this.numberFormat = nf;
+	}
+	
+	public NumberFormat getNumberFormat() {
+		return numberFormat;
+	}
+	
 	@Override
 	public Component getTableCellRendererComponent(final JTable table, final Object value,
 			final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		if (font != null) {
-			setFont(font);
-		}
-		setText(getText(((Number)value).longValue()));
+		setText(getNumberText(((Number)value).longValue()));
 		return this;
 	}
 	
-	public String getText(long l) {
-		return numberFormat.format(l);
+	public String getNumberText(long l) {
+		return getNumberFormat().format(l);
 	}
 
 }

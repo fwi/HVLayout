@@ -69,6 +69,20 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	/* *** Shrink options *** */
 	
 	/**
+	 * Allow component to shrink to half of the current preferred size.
+	 */
+	public CSIZE shrinkSize() {
+		return shrinkSize(0.5f, 0.5f);
+	}
+	
+	/**
+	 * Allow component to shrink to given width- and height-factors of the current preferred size.
+	 */
+	public CSIZE shrinkSize(float widthFactor, float heightFactor) {
+		return shrinkWidth(widthFactor).shrinkHeight(heightFactor);
+	}	
+
+	/**
 	 * Allow component to shrink in width to half of the current preferred width.
 	 */
 	public CSIZE shrinkWidth() {
@@ -97,6 +111,20 @@ public class BaseCSize3<CSIZE extends BaseCSize3<CSIZE, CTYPE>, CTYPE extends Co
 	}
 	
 	/* *** Grow options *** */
+
+	/**
+	 * Allow component to grow to two times of the current preferred size.
+	 */
+	public CSIZE growSize() {
+		return growSize(2.0f, 2.0f);
+	}
+	
+	/**
+	 * Allow component to grow to given width- and height-factors of the current preferred size.
+	 */
+	public CSIZE growSize(float widthFactor, float heightFactor) {
+		return growWidth(widthFactor).growHeight(heightFactor);
+	}	
 
 	/**
 	 * Allow component to grow in width to two times the current preferred width.

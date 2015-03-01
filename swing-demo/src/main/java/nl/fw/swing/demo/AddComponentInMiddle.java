@@ -48,7 +48,7 @@ public class AddComponentInMiddle extends JFrame implements ActionListener {
 	public AddComponentInMiddle build() {
 
 		CSize cs = new CSize();
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		form.add(labelScroller = new JScrollPane(labels = new VBox()));
 		form.csize().setAreaSize();
 		form.addChild(new HBox());

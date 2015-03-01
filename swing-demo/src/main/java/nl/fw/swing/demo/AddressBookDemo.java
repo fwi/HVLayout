@@ -79,7 +79,7 @@ public class AddressBookDemo extends JFrame {
 	
 	public AddressBookDemo build() {
 		
-		CForm form = new CForm(new VBox(new Insets(2, 4, 2, 4)));
+		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		CSize cs = form.csize();
 		
 		addTitledBorder(form.get(), "Main vertical box", Color.BLACK);
@@ -146,16 +146,16 @@ public class AddressBookDemo extends JFrame {
 		String[] blabels = new String[] {"Add", "Modify", "View details" };
 		for (int i = 0; i < blabels.length; i ++) {
 			b = new TButton(blabels[i]);
-			form.add(b).csize().setFixedButtonSize();
+			form.add(b).csize().setButtonSize();
 		}
 		
 		// Add a floating delete button 
 		form.up().addChild(new HBox(HBox.CENTER));		
 		addTitledBorder(form.get(), "Centered box", Color.ORANGE);
-		form.add(new TButton("Delete")).csize().setFixedButtonSize();
+		form.add(new TButton("Delete")).csize().setButtonSize();
 		// Add canvas so that delete-button is not (always) in the right-bottom corner
 		// A "new Canvas()" does not show a TitledBorder, an empty label does. 
-		form.add(new TLabel("")).csize().setFixedButtonSize().setMinWidth(1);
+		form.add(new TLabel("")).csize().setButtonSize().setMinWidth(1);
 		addTitledBorder(form.getLast(), "Canvas", Color.GRAY);
 
 		// Add a scroller around the complete window
@@ -183,7 +183,7 @@ public class AddressBookDemo extends JFrame {
 	public static TLabel createTextFieldLabel(CSize cs, String labelText) {
 		
 		TLabel c = new TLabel(labelText, HBox.TRAILING);
-		cs.set(c).setFixedButtonSize();
+		cs.set(c).setButtonSize();
 		return c;
 	}
 	
