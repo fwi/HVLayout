@@ -1,8 +1,6 @@
 package nl.fw.swing.demo;
 
 import java.awt.Canvas;
-import java.awt.ComponentOrientation;
-import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -32,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author fred
  *
  */
-@SuppressWarnings({ "serial", "unused" })
+@SuppressWarnings("serial")
 public class DummyTestFrame extends JFrame {
 
 	protected static Logger log = LoggerFactory.getLogger(DummyTestFrame.class);
@@ -55,6 +53,15 @@ public class DummyTestFrame extends JFrame {
 		CSize cs = new CSize();
 		CForm form = new CForm(new VBox(CForm.MAIN_BOX_INSETS));
 		
+		// Shrink test
+		/*
+		form.addChild(new HBox());
+		form.add(new JTextField("Text line default")).csize().setLineSize().scaleWidth(2.0f);
+		form.add(new JTextField("Text line smaller min width")).csize().setLineSize().scaleWidth(2.0f).setMinWidth(0.5f);
+		form.add(new JTextField("Text line bigger min width")).csize().setLineSize().scaleWidth(2.0f).setMinWidth(1.5f);
+		form.up();
+		*/
+		
 		form.addChild(new HBox());
 		form.add(new JTextField("Leading text line unlimited width")).csize().setLineSize().setPrefWidth(2.0f);
 		form.addChild(new HBox(HBox.TRAILING));
@@ -62,6 +69,7 @@ public class DummyTestFrame extends JFrame {
 		form.toRoot();
 		
 		JList<String> list = new JList<String>(new String[] { "A", "B", "C", "D", "E", "F"});
+		// there is a little jump hen resizing between "almost max height" to "max height".
 		form.add(cs.set(list).setAreaSize(0.5f, 2.0f).fixedWidth().setMaxHeight(4.0f).get());
 
 		HBox boxSpaced = new HBox(HBox.CENTER);

@@ -106,7 +106,7 @@ public class AddressBookDemo extends JFrame {
 		// Scaling is required, else preferred size shows too wide (3 times line-width 
 		// (street text-field, house-number text-field and mirror-line) instead of the intended 2 times line-width). 
 		form.add(createTextField(cs, "Dust Drive")).csize().scaleWidth(0.75f);
-		form.add(createTextField(cs, "42")).csize().scaleWidth(0.25f);
+		form.add(createTextField(cs, "42")).csize().scaleWidth(0.25f).setMaxWidthButton();
 		
 		// Keep street and number to the left
 		// The mirror line must be in a separate Hbox, just like the street and house-number fields,
