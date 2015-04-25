@@ -188,19 +188,30 @@ public class HLayout extends HVLayout {
 			int maxWidthStatic = 0;
 			final Map<Component, Integer> grownMaxWidth = new HashMap<Component, Integer>();
 			if (grow) {
-				for (int i = 0; i < parts.size(); i++) {
-					final Component c = parts.get(i);
-					Dimension cpref = c.getPreferredSize();
-					Dimension cmax = c.getMaximumSize();
-					if (cmax.width > cpref.width) {
-						int extra = (int)((maxWidth - dpreferred.width) * ((float)cpref.width / varMaxSize));
-						if (extra > cmax.width - cpref.width) {
-							varMaxWidthUsed -= cpref.width;
-							grownMaxWidth.put(c, cmax.width);
-							maxWidthStatic += (cmax.width - cpref.width);
+				boolean partMaxGrown = true;
+				// Every time a component is removed from the grow-list
+				// all growing components need to be re-evaluated with the new grow-width to divide.
+				// At least, that is the case in VLayout, have not seen this case in HLayout. 
+				while (partMaxGrown) {
+					partMaxGrown = false;
+					for (int i = 0; i < parts.size(); i++) {
+						final Component c = parts.get(i);
+						if (grownMaxWidth.containsKey(c)) {
+							continue;
 						}
-					}
-				} // for parts
+						Dimension cpref = c.getPreferredSize();
+						Dimension cmax = c.getMaximumSize();
+						if (cmax.width > cpref.width) {
+							int extra = (int)((maxWidth - dpreferred.width) * ((float)cpref.width / varMaxWidthUsed));
+							if (extra > cmax.width - cpref.width) {
+								varMaxWidthUsed -= cpref.width;
+								grownMaxWidth.put(c, cmax.width);
+								maxWidthStatic += (cmax.width - cpref.width);
+								partMaxGrown = true;
+							}
+						}
+					} // for parts
+				} // while part grown max.
 				grow = (varMaxWidthUsed > 0);
 			}
 			final int maxGrowWidthToDivide = maxWidth - dpreferred.width - maxWidthStatic;

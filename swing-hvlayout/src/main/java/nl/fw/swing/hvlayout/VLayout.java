@@ -183,19 +183,30 @@ public class VLayout extends HVLayout {
 			int maxHeightStatic = 0;
 			final Map<Component, Integer> grownMaxHeight = new HashMap<Component, Integer>();
 			if (grow) {
-				for (int i = 0; i < parts.size(); i++) {
-					final Component c = parts.get(i);
-					Dimension cpref = c.getPreferredSize();
-					Dimension cmax = c.getMaximumSize();
-					if (cmax.height > cpref.height) {
-						int extra = (int)((maxHeight - dpreferred.height) * ((float)cpref.height / varMaxSize));
-						if (extra > cmax.height - cpref.height) {
-							varMaxHeightUsed -= cpref.height;
-							grownMaxHeight.put(c, cmax.height);
-							maxHeightStatic += (cmax.height - cpref.height);
+				boolean partMaxGrown = true;
+				// Every time a component is removed from the grow-list
+				// all growing components need to be re-evaluated with the new grow-height to divide.
+				// There can still be a little jump from "almost max height" to "max height".
+				while (partMaxGrown) {
+					partMaxGrown = false;
+					for (int i = 0; i < parts.size(); i++) {
+						final Component c = parts.get(i);
+						if (grownMaxHeight.containsKey(c)) {
+							continue;
 						}
-					}
-				} // for parts
+						Dimension cpref = c.getPreferredSize();
+						Dimension cmax = c.getMaximumSize();
+						if (cmax.height > cpref.height) {
+							int extra = (int)((maxHeight - dpreferred.height) * ((float)cpref.height / varMaxHeightUsed));
+							if (extra > cmax.height - cpref.height) {
+								varMaxHeightUsed -= cpref.height;
+								grownMaxHeight.put(c, cmax.height);
+								maxHeightStatic += (cmax.height - cpref.height);
+								partMaxGrown = true;
+							}
+						}
+					} // for parts
+				} // while part grown max.
 				grow = (varMaxHeightUsed > 0);
 			}
 			final int maxGrowHeightToDivide = maxHeight - dpreferred.height - maxHeightStatic;
