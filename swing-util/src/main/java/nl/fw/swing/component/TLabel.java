@@ -13,6 +13,12 @@ import javax.swing.JLabel;
 public class TLabel extends JLabel {
 	
 	private static final long serialVersionUID = 5815324549890565898L;
+	/**
+	 * Constant used to indicate there is no custom tooltip-text set
+	 * and the label-text itself can be displayed as tooltip-text
+	 * when the label-text is truncated on screen. 
+	 */
+	public static final String NO_TOOLTIP_TEXT = " ";
 
 	public TLabel() {
         this(null, null, LEADING);
@@ -45,7 +51,7 @@ public class TLabel extends JLabel {
 	public TLabel(String text, Icon image, int horizontalAlignment) {
 		super(text, image, horizontalAlignment);
 		setIconTextGap(2);
-		setToolTipText(" ");
+		setToolTipText(NO_TOOLTIP_TEXT);
 		setRequestFocusEnabled(false);
 	}
 	
@@ -59,16 +65,17 @@ public class TLabel extends JLabel {
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		
-		String text = super.getToolTipText();
-		if (!" ".equals(text)) return text;
-		int iconWidth = (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
-		int textSpace = getWidth() - iconWidth - getInsets().left - getInsets().right;
-		int textWidth = getFontMetrics(getFont()).stringWidth(getText());
-		return (textWidth > textSpace ? text : null);
+		if (NO_TOOLTIP_TEXT != super.getToolTipText()) {
+			return super.getToolTipText();
+		}
+		int minWidth = getDisplayWidth();
+		int currentWidth = getWidth();
+		// System.out.println("Width: " + currentWidth + ", min: " + minWidth);
+		return (currentWidth < minWidth ? getText() : null);
 	}
 	
 	/**
-	 * Width calculated from text-width, icon-width and insets.
+	 * Label width required to fully display the label-text. 
 	 */
 	public int getDisplayWidth() {
 		
