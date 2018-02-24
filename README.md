@@ -1,5 +1,8 @@
 ##### HVLayout manager for Java Swing
 
+**Deprecated**
+A newer version is available at the [swing-formlayout](https://github.com/fwi/swing-formlayout) repository. The newer version is missing some Swing goodies included in this repository though.
+
 Windows should be resizable and window contents should adapt to user preferred font size. 
 For many people displaying text with a large font is not an option but a requirement to read information on screen 
 (e.g. the ``ctrl-plus`` function in an internet browser is a necessity).
